@@ -66,6 +66,10 @@
         "test": [
             "@php artisan config:clear --ansi",
             "@php artisan test"
+        ],
+        "review": [
+            "./vendor/bin/pint --parallel",
+            "./vendor/bin/rector"
         ]
     },
     "extra": {
