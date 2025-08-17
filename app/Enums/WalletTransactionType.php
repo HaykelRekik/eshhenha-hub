@@ -7,6 +7,7 @@ namespace App\Enums;
 use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasIcon;
 use Filament\Support\Contracts\HasLabel;
+use Filament\Support\Icons\Heroicon;
 
 enum WalletTransactionType: string implements HasColor, HasIcon, HasLabel
 {
@@ -30,18 +31,18 @@ enum WalletTransactionType: string implements HasColor, HasIcon, HasLabel
         };
     }
 
-    public function getIcon(): ?string
+    public function getIcon(): string|null|\BackedEnum
     {
         return match ($this) {
-            self::DEPOSIT => 'heroicon-o-arrow-down-tray',
-            self::WITHDRAWAL => 'heroicon-o-arrow-up-tray',
-            self::LOYALTY_CONVERSION => 'heroicon-o-arrows-right-left',
-            self::ADJUSTMENT => 'heroicon-o-adjustments-vertical',
-            self::REFUND => 'heroicon-o-arrow-uturn-left',
-            self::TRANSFER_IN => 'heroicon-o-inbox-arrow-down',
-            self::TRANSFER_OUT => 'heroicon-o-paper-airplane',
-            self::EXPIRATION => 'heroicon-o-clock',
-            self::FEE => 'heroicon-o-banknotes',
+            self::DEPOSIT => Heroicon::ArrowDownTray,
+            self::WITHDRAWAL => Heroicon::ArrowUpTray,
+            self::LOYALTY_CONVERSION => Heroicon::ArrowsRightLeft,
+            self::ADJUSTMENT => Heroicon::AdjustmentsVertical,
+            self::REFUND => Heroicon::ArrowUturnLeft,
+            self::TRANSFER_IN => Heroicon::InboxArrowDown,
+            self::TRANSFER_OUT => Heroicon::PaperAirplane,
+            self::EXPIRATION => Heroicon::Clock,
+            self::FEE => Heroicon::Banknotes
         };
     }
 

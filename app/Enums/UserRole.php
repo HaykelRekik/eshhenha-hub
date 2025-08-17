@@ -30,7 +30,7 @@ enum UserRole: string implements HasColor, HasIcon, HasLabel
         };
     }
 
-    public function getIcon(): string|BackedEnum|null
+    public function getIcon(): string|null|\BackedEnum
     {
         return match ($this) {
             self::ADMIN => PhosphorIcons::ShieldStarDuotone,
