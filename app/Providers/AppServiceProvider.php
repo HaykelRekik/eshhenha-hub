@@ -12,9 +12,7 @@ class AppServiceProvider extends ServiceProvider
     /**
      * Register any application services.
      */
-    public function register(): void
-    {
-    }
+    public function register(): void {}
 
     /**
      * Bootstrap any application services.
@@ -23,6 +21,6 @@ class AppServiceProvider extends ServiceProvider
     {
         Model::automaticallyEagerLoadRelationships();
 
-        Model::shouldBeStrict(shouldBeStrict: app()->isLocal() && !app()->runningInConsole());
+        Model::shouldBeStrict(shouldBeStrict: app()->isLocal() && ! app()->runningInConsole());
     }
 }
