@@ -16,12 +16,12 @@ class WelcomeBonusTab
         return Tab::make(__('Welcome Bonus'))
             ->columns(2)
             ->icon(PhosphorIcons::ConfettiDuotone)
-            ->schema([
+            ->components([
                 TextInput::make('welcome_bonus')
                     ->label(__('Welcome Bonus Points'))
                     ->numeric()
                     ->hintIcon(
-                        icon: Heroicon::InformationCircle,
+                        icon: Heroicon::OutlinedInformationCircle,
                         tooltip: __('The points a newly registered user receives upon successful registration as a welcome bonus.')
                     )
                     ->hintColor('info')

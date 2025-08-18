@@ -37,7 +37,7 @@ class GeneralSettingsPage extends SettingsPage
         return $schema
             ->components([
                 Tabs::make('Settings')
-                    ->schema([
+                    ->components([
                         GeneralTab::make(),
                         SeoTab::make(),
                     ]),

@@ -9,14 +9,14 @@ use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Tabs\Tab;
 use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 
-class ContactInformationTab
+final class ContactInformationTab
 {
     public static function make(): Tab
     {
         return Tab::make(__('Contact Information'))
             ->icon(PhosphorIcons::ContactlessPaymentDuotone)
             ->columns(2)
-            ->schema([
+            ->components([
                 TextInput::make('contacts.email')
                     ->nullable()
                     ->email()

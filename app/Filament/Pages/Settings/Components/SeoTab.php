@@ -7,12 +7,12 @@ namespace App\Filament\Pages\Settings\Components;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Tabs\Tab;
 
-class SeoTab
+final class SeoTab
 {
     public static function make(): Tab
     {
         return Tab::make('Seo')
-            ->schema([
+            ->components([
                 TextInput::make('seo_title')
                     ->required(),
                 TextInput::make('seo_description')

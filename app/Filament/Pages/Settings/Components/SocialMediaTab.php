@@ -15,7 +15,7 @@ class SocialMediaTab
         return Tab::make(__('Social Media Links'))
             ->columns(2)
             ->icon(PhosphorIcons::LinkDuotone)
-            ->schema([
+            ->components([
                 TextInput::make('social_media.facebook')
                     ->nullable()
                     ->url()

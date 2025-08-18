@@ -43,7 +43,7 @@ class RewardSettingsPage extends SettingsPage
             ->components([
                 Tabs::make(__('Referral System'))
                     ->columnSpanFull()
-                    ->schema([
+                    ->components([
                         ReferralSystemTab::make(),
                         WelcomeBonusTab::make(),
                     ]),

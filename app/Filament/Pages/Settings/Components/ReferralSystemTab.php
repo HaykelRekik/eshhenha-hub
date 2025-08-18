@@ -9,19 +9,19 @@ use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Support\Icons\Heroicon;
 
-class ReferralSystemTab
+final class ReferralSystemTab
 {
     public static function make(): Tab
     {
         return Tab::make(__('Referral System'))
             ->icon(PhosphorIcons::GiftDuotone)
             ->columns(2)
-            ->schema([
+            ->components([
                 TextInput::make('referrer_user_points')
                     ->label(__('Referrer User Points'))
                     ->numeric()
                     ->hintIcon(
-                        icon: Heroicon::InformationCircle,
+                        icon: Heroicon::OutlinedInformationCircle,
                         tooltip: __('the number of points the referrer earns when someone they invited signs up successfully. These points are automatically credited to the referrer\'s account upon the referred user\'s registration.')
                     )
                     ->hintColor('info')
@@ -34,7 +34,7 @@ class ReferralSystemTab
                     ->label(__('Referred User Points'))
                     ->numeric()
                     ->hintIcon(
-                        icon: Heroicon::InformationCircle,
+                        icon: Heroicon::OutlinedInformationCircle,
                         tooltip: __('the number of points a newly registered user receives when they sign up using a referral code. These points are automatically credited to their account upon successful registration.')
                     )
                     ->hintColor('info')
