@@ -9,6 +9,7 @@ use App\Filament\Pages\Auth\Register;
 use App\Filament\Pages\Settings\ContactChannelsSettingsPage;
 use App\Filament\Pages\Settings\GeneralSettingsPage;
 use App\Filament\Pages\Settings\RewardSettingsPage;
+use App\Filament\Resources\Users\UserResource;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -110,19 +111,19 @@ class AdminPanelProvider extends PanelProvider
                 NavigationItem::make('all')
                     ->label(fn (): string => __('All accounts'))
                     ->isActiveWhen(fn (): bool => 'all' === request()->get('activeTab'))
-//                    ->url(fn(): string => UserResource::getUrl('index') . '?activeTab=all')
+                    ->url(fn (): string => UserResource::getUrl('index') . '?activeTab=all')
                     ->group(fn (): string => __('Users Management')),
 
                 NavigationItem::make('admins')
                     ->label(fn (): string => __('Administration'))
                     ->isActiveWhen(fn (): bool => 'admins' === request()->get('activeTab'))
-//                    ->url(fn(): string => UserResource::getUrl('index') . '?activeTab=admins')
+                    ->url(fn (): string => UserResource::getUrl('index') . '?activeTab=admins')
                     ->group(fn (): string => __('Users Management')),
 
                 NavigationItem::make('customers')
                     ->label(fn (): string => __('Customers'))
                     ->isActiveWhen(fn (): bool => 'users' === request()->get('activeTab'))
-//                    ->url(fn(): string => UserResource::getUrl('index') . '?activeTab=users')
+                    ->url(fn (): string => UserResource::getUrl('index') . '?activeTab=users')
                     ->group(fn (): string => __('Users Management')),
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')

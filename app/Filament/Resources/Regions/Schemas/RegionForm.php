@@ -2,37 +2,41 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources\Countries\Schemas;
+namespace App\Filament\Resources\Regions\Schemas;
 
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
-class CountryForm
+class RegionForm
 {
     public static function configure(Schema $schema): Schema
     {
         return $schema
             ->components([
                 Section::make()
-
                     ->columns(3)
                     ->schema([
                         TextInput::make('name_ar')
-                            ->label(__('Name (Arabic)'))
-                            ->required(),
+                            ->required()
+                            ->label(__('Name (Arabic)')),
 
                         TextInput::make('name_en')
-                            ->label(__('Name (English)'))
-                            ->required(),
+                            ->required()
+                            ->label(__('Name (English)')),
 
                         TextInput::make('name_ur')
-                            ->label(__('Name (Urdu)'))
-                            ->required(),
-                        TextInput::make('iso_code')
-                            ->label(__('ISO Code'))
-                            ->required(),
+                            ->required()
+                            ->label(__('Name (Urdu)')),
+
+                        Select::make('country_id')
+                            ->label(__('Country Name'))
+                            ->required()
+                            ->preload()
+                            ->searchable(['name_ar', 'name_en', 'name_ur'])
+                            ->relationship(name: 'country', titleAttribute: 'name_' . app()->getLocale()),
 
                         ToggleButtons::make('is_active')
                             ->label(__('Status'))
@@ -42,7 +46,6 @@ class CountryForm
                                 falseLabel: __('Inactive'),
                             )
                             ->required(),
-
                     ]),
             ]);
     }

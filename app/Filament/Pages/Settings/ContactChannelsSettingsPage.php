@@ -42,7 +42,7 @@ class ContactChannelsSettingsPage extends SettingsPage
         return $schema
             ->components([
                 Tabs::make()
-                    ->columnSpanFull()
+
                     ->components([
                         SocialMediaTab::make(),
                         ContactInformationTab::make(),

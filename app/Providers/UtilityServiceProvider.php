@@ -10,6 +10,8 @@ use Filament\Actions\CreateAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Schemas\Components\Wizard;
 use Filament\Tables\Table;
 use Illuminate\Support\ServiceProvider;
 
@@ -38,6 +40,10 @@ class UtilityServiceProvider extends ServiceProvider
         Select::configureUsing(modifyUsing: fn (Select $select): Select => $select->native(false));
 
         Section::configureUsing(modifyUsing: fn (Section $section): Section => $section->columns(2)->columnSpanFull());
+
+        Tab::configureUsing(modifyUsing: fn (Tab $tab): Tab => $tab->columnSpanFull());
+
+        Wizard::configureUsing(modifyUsing: fn (Wizard $wizard): Wizard => $wizard->columnSpanFull()->skippable(app()->isLocal()));
 
         ToggleButtons::configureUsing(modifyUsing: fn (ToggleButtons $toggleButtons): ToggleButtons => $toggleButtons->inline());
 

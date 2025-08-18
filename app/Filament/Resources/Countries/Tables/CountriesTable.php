@@ -47,8 +47,6 @@ class CountriesTable
             ])
             ->recordActions([
                 EditAction::make(),
-            ])
-            ->toolbarActions([
             ]);
     }
 }
