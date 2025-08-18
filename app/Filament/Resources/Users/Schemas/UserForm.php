@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Users\Schemas;
 
+use App\Enums\Icons\PhosphorIcons;
 use App\Enums\UserRole;
 use App\Models\City;
 use App\Models\Country;
@@ -32,7 +33,7 @@ class UserForm
                     ->steps([
                         Step::make(__('Account Information'))
                             ->description(__('Account general information.'))
-                            ->icon('phosphor-identification-card-duotone')
+                            ->icon(PhosphorIcons::IdentificationCardDuotone)
                             ->schema([
                                 ToggleButtons::make('role')
                                     ->label(__('Account type'))
@@ -87,7 +88,7 @@ class UserForm
                             ]),
                         Step::make(__('Address management'))
                             ->description(__('Default shipping address'))
-                            ->icon('phosphor-map-pin-area-duotone')
+                            ->icon(PhosphorIcons::MapPinAreaDuotone)
                             ->hidden(fn (Get $get): bool => $get('role') === UserRole::ADMIN->value)
                             ->schema([
                                 Grid::make(3)

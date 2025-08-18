@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Wallets\Tables;
 
+use App\Enums\Icons\PhosphorIcons;
 use App\Enums\WalletTransactionType;
 use App\Models\Wallet;
 use Filament\Actions\Action;
@@ -17,6 +18,7 @@ use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Grid;
 use Filament\Support\Enums\FontWeight;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -31,7 +33,7 @@ class WalletsTable
             ->columns([
                 TextColumn::make('user.name')
                     ->label(__('User account'))
-                    ->icon('phosphor-cardholder-duotone')
+                    ->icon(PhosphorIcons::CardholderDuotone)
                     ->weight(FontWeight::Medium)
                     ->description(fn (Wallet $record): ?string => $record->user?->company?->name)
                     ->searchable(),
@@ -85,7 +87,7 @@ class WalletsTable
     {
         return Action::make('addTransaction')
             ->label(__('Add Transaction'))
-            ->icon('heroicon-o-plus-circle')
+            ->icon(Heroicon::OutlinedPlusCircle)
             ->color('primary')
             ->modalHeading(fn (Wallet $record) => __('Add Transaction for :user', ['user' => $record->user->name]))
             ->modalDescription(__('This action will create a new transaction and update the wallet balance accordingly. Please be careful.'))

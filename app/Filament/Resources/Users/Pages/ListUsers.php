@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Users\Pages;
 
+use App\Enums\Icons\PhosphorIcons;
 use App\Enums\UserRole;
 use App\Filament\Resources\Users\UserResource;
 use Filament\Actions\CreateAction;
@@ -19,7 +20,7 @@ class ListUsers extends ListRecords
     {
         return [
             'all' => Tab::make(__('All Users'))
-                ->icon('phosphor-users-duotone'),
+                ->icon(PhosphorIcons::UsersDuotone),
 
             'admins' => Tab::make(__('Admins'))
                 ->icon(UserRole::ADMIN->getIcon())

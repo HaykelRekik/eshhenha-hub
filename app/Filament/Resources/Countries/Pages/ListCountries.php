@@ -11,6 +11,7 @@ use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
+use Filament\Support\Icons\Heroicon;
 
 class ListCountries extends ListRecords
 {
@@ -23,12 +24,12 @@ class ListCountries extends ListRecords
             ActionGroup::make([
                 Action::make('Regions')
                     ->label(__('Regions management'))
-                    ->icon('heroicon-o-map')
+                    ->icon(Heroicon::OutlinedMap)
                     ->url(RegionResource::getUrl('index')),
 
                 Action::make('Cities')
                     ->label(__('Cities management'))
-                    ->icon('heroicon-o-building-office')
+                    ->icon(Heroicon::OutlinedBuildingOffice)
                     ->url(CityResource::getUrl('index')),
             ])->color('dark'),
         ];
