@@ -12,13 +12,11 @@ use Illuminate\Support\ServiceProvider;
 
 class MacrosServiceProvider extends ServiceProvider
 {
-    public function register(): void
-    {
-    }
+    public function register(): void {}
 
     public function boot(): void
     {
-        $saudiRiyalMacro = function (string $position = 'suffix', array $viewParameters = []) {
+        $saudiRiyalMacro = function (string $position = 'suffix', array $viewParameters = []): static {
 
             /** @var Field|Column $this */
             $defaults = [
