@@ -10,6 +10,7 @@ use Filament\Actions\CreateAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
+use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
@@ -63,7 +64,9 @@ class UtilityServiceProvider extends ServiceProvider
             Section::class,
             Grid::class,
             Tabs::class,
+            Fieldset::class,
         ] as $component) {
+            /** @var $component Section|Grid|Tabs|Fieldset */
             $component::configureUsing(
                 modifyUsing: fn ($instance) => $instance->columns(2)->columnSpanFull()
             );
