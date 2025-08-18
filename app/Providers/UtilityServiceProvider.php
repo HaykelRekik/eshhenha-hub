@@ -12,7 +12,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
-use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Wizard;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Table;
@@ -43,12 +43,6 @@ class UtilityServiceProvider extends ServiceProvider
 
         Select::configureUsing(modifyUsing: fn (Select $select): Select => $select->native(false));
 
-        Section::configureUsing(modifyUsing: fn (Section $section): Section => $section->columns(2)->columnSpanFull());
-
-        Grid::configureUsing(modifyUsing: fn (Grid $grid): Grid => $grid->columns(2)->columnSpanFull());
-
-        Tab::configureUsing(modifyUsing: fn (Tab $tab): Tab => $tab->columnSpanFull());
-
         Wizard::configureUsing(modifyUsing: fn (Wizard $wizard): Wizard => $wizard->columnSpanFull()->skippable(app()->isLocal()));
 
         ToggleButtons::configureUsing(modifyUsing: fn (ToggleButtons $toggleButtons): ToggleButtons => $toggleButtons->inline());
@@ -64,6 +58,16 @@ class UtilityServiceProvider extends ServiceProvider
             ->excludeCountries(['IL'])
             ->autoPlaceholder('aggressive')
             ->defaultCountry('SA'));
+
+        foreach ([
+            Section::class,
+            Grid::class,
+            Tabs::class,
+        ] as $component) {
+            $component::configureUsing(
+                modifyUsing: fn ($instance) => $instance->columns(2)->columnSpanFull()
+            );
+        }
 
     }
 }
