@@ -110,20 +110,20 @@ class AdminPanelProvider extends PanelProvider
                 // User Management Child Items
                 NavigationItem::make('all')
                     ->label(fn (): string => __('All accounts'))
-                    ->isActiveWhen(fn (): bool => 'all' === request()->get('activeTab'))
-                    ->url(fn (): string => UserResource::getUrl('index') . '?activeTab=all')
+                    ->isActiveWhen(fn (): bool => 'all' === request()->get('tab'))
+                    ->url(fn (): string => UserResource::getUrl('index') . '?tab=all')
                     ->group(fn (): string => __('Users Management')),
 
                 NavigationItem::make('admins')
                     ->label(fn (): string => __('Administration'))
-                    ->isActiveWhen(fn (): bool => 'admins' === request()->get('activeTab'))
-                    ->url(fn (): string => UserResource::getUrl('index') . '?activeTab=admins')
+                    ->isActiveWhen(fn (): bool => 'admins' === request()->get('tab'))
+                    ->url(fn (): string => UserResource::getUrl('index') . '?tab=admins')
                     ->group(fn (): string => __('Users Management')),
 
                 NavigationItem::make('customers')
                     ->label(fn (): string => __('Customers'))
-                    ->isActiveWhen(fn (): bool => 'users' === request()->get('activeTab'))
-                    ->url(fn (): string => UserResource::getUrl('index') . '?activeTab=users')
+                    ->isActiveWhen(fn (): bool => 'users' === request()->get('tab'))
+                    ->url(fn (): string => UserResource::getUrl('index') . '?tab=users')
                     ->group(fn (): string => __('Users Management')),
             ])
             ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')

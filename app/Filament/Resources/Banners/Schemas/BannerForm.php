@@ -56,7 +56,7 @@ class BannerForm
                             ->autosize(),
 
                         TextInput::make('link')
-                            ->label('Link')
+                            ->label(__('Link'))
                             ->nullable()
                             ->url()
                             ->prefixIcon(Heroicon::OutlinedLink)
