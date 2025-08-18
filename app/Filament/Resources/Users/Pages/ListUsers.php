@@ -15,13 +15,6 @@ class ListUsers extends ListRecords
 {
     protected static string $resource = UserResource::class;
 
-    protected function getHeaderActions(): array
-    {
-        return [
-            CreateAction::make(),
-        ];
-    }
-
     public function getTabs(): array
     {
         return [
@@ -30,15 +23,22 @@ class ListUsers extends ListRecords
 
             'admins' => Tab::make(__('Admins'))
                 ->icon(UserRole::ADMIN->getIcon())
-                ->modifyQueryUsing(fn(Builder $query): Builder => $query->role(UserRole::ADMIN)),
+                ->modifyQueryUsing(fn (Builder $query): Builder => $query->role(UserRole::ADMIN)),
 
             'companies' => Tab::make(__('Companies'))
                 ->icon(UserRole::COMPANY->getIcon())
-                ->modifyQueryUsing(fn(Builder $query): Builder => $query->role(UserRole::COMPANY)),
+                ->modifyQueryUsing(fn (Builder $query): Builder => $query->role(UserRole::COMPANY)),
 
             'users' => Tab::make(__('Customers'))
                 ->icon(UserRole::USER->getIcon())
-                ->modifyQueryUsing(fn(Builder $query): Builder => $query->role(UserRole::USER)),
+                ->modifyQueryUsing(fn (Builder $query): Builder => $query->role(UserRole::USER)),
+        ];
+    }
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            CreateAction::make(),
         ];
     }
 }

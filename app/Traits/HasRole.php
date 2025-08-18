@@ -40,7 +40,7 @@ trait HasRole
     /**
      * Resolves a string or UserRole input into a UserRole enum instance.
      *
-     * @param string|UserRole $role The role to resolve
+     * @param  string|UserRole  $role  The role to resolve
      * @return UserRole The resolved UserRole enum or null if invalid
      */
     private function resolveRole(string|UserRole $role): UserRole

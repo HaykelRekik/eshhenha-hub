@@ -10,6 +10,7 @@ use Filament\Actions\CreateAction;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
+use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs\Tab;
 use Filament\Schemas\Components\Wizard;
@@ -43,6 +44,8 @@ class UtilityServiceProvider extends ServiceProvider
         Select::configureUsing(modifyUsing: fn (Select $select): Select => $select->native(false));
 
         Section::configureUsing(modifyUsing: fn (Section $section): Section => $section->columns(2)->columnSpanFull());
+
+        Grid::configureUsing(modifyUsing: fn (Grid $grid): Grid => $grid->columns(2)->columnSpanFull());
 
         Tab::configureUsing(modifyUsing: fn (Tab $tab): Tab => $tab->columnSpanFull());
 

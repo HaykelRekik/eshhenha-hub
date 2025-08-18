@@ -20,7 +20,7 @@ class WalletInfolist
                 Section::make()
                     ->heading(__('Wallet Information'))
                     ->icon('phosphor-wallet-duotone')
-                    ->schema([
+                    ->components([
                         Grid::make()
                             ->columns(6)
                             ->schema([
