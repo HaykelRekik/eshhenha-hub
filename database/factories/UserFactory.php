@@ -4,7 +4,11 @@ declare(strict_types=1);
 
 namespace Database\Factories;
 
+use App\Enums\UserRole;
+use App\Models\Address;
+use App\Models\Company;
 use App\Models\User;
+use App\Models\Warehouse;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -29,10 +33,52 @@ class UserFactory extends Factory
         return [
             'name' => fake()->name(),
             'email' => fake()->unique()->safeEmail(),
-            'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
-            'remember_token' => Str::random(10),
+            'phone_number' => fake()->unique()->numerify('+96650#######'),
+            'national_id' => fake()->unique()->numerify('1##########'),
+            'avatar_url' => null,
+            'role' => UserRole::USER,
+            'is_active' => true,
+            'last_login_at' => fake()->dateTimeThisMonth(),
+            'last_login_ip' => fake()->ipv4(),
+            'referral_code' => Str::upper(Str::random(8)),
+            'referred_by' => null,
+            'email_verified_at' => now(),
         ];
+    }
+
+    /**
+     * Configure the model factory.
+     */
+    public function configure(): static
+    {
+        return $this->afterCreating(function (User $user): void {
+            if ($user->company) {
+                return;
+            }
+
+            Address::factory(random_int(1, 3))->create([
+                'addressable_id' => $user->id,
+                'addressable_type' => User::class,
+            ]);
+        });
+    }
+
+    /**
+     * Indicate that the user has a company profile with warehouses.
+     */
+    public function withCompanyProfile(): static
+    {
+        return $this->afterCreating(function (User $user): void {
+            Company::factory()
+                ->for($user)
+                ->has(Address::factory(), 'address')
+                ->has(
+                    Warehouse::factory()->count(2)
+                        ->has(Address::factory(), 'address')
+                )
+                ->create();
+        });
     }
 
     /**

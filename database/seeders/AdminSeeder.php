@@ -9,6 +9,9 @@ use Illuminate\Database\Seeder;
 
 class AdminSeeder extends Seeder
 {
+    /**
+     * Run the database seeds.
+     */
     public function run(): void
     {
         User::firstOrCreate(
@@ -18,8 +21,11 @@ class AdminSeeder extends Seeder
             values: [
                 'name' => 'Admin',
                 'password' => '123123123',
+                'role' => 'admin',
+                'is_active' => true,
+                'national_id' => '00000000',
+                'phone_number' => '96',
             ]
         );
-
     }
 }
