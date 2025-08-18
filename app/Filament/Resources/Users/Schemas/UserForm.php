@@ -19,6 +19,7 @@ use Filament\Schemas\Components\Wizard;
 use Filament\Schemas\Components\Wizard\Step;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Collection;
+use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 
 class UserForm
 {
@@ -27,7 +28,6 @@ class UserForm
         return $schema
             ->components([
                 Wizard::make()
-
                     ->columns(3)
                     ->steps([
                         Step::make(__('Account Information'))
@@ -59,11 +59,9 @@ class UserForm
                                     ->visibleOn('create')
                                     ->required(),
 
-                                //                            should i install ysfkaya/filament-phone-input ?
-                                TextInput::make('phone_number')
+                                PhoneInput::make('phone_number')
                                     ->label(__('Phone Number'))
                                     ->required()
-                                    ->tel()
                                     ->unique(table: 'users', column: 'phone_number', ignoreRecord: true),
 
                                 TextInput::make('national_id')
@@ -71,8 +69,12 @@ class UserForm
                                     ->extraInputAttributes(['maxlength' => 10], true)
                                     ->unique(table: 'users', column: 'national_id', ignoreRecord: true)
                                     ->rule(new SaudiNationalID())
-                                    ->hidden(fn (Get $get): bool => $get('role') !== UserRole::USER->value)
-                                    ->required(fn (Get $get): bool => $get('role') === UserRole::USER->value),
+                                    ->hiddenJs(
+                                        <<<'JS'
+                                            $get('role') !== 'customer'
+                                          JS
+                                    )
+                                    ->required(fn (Get $get): bool => UserRole::USER === $get('role')),
 
                                 ToggleButtons::make('is_active')
                                     ->label(__('Account Status'))

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "261e0b43afeab35a2292a3879e474d49",
+    "content-hash": "8bd1d9114a4cbf3357f6eebe1941dec7",
     "packages": [
         {
             "name": "anourvalar/eloquent-serialize",
@@ -9418,6 +9418,66 @@
             "time": "2025-03-05T08:29:11+00:00"
         },
         {
+            "name": "coding-socks/lost-in-translation",
+            "version": "v0.3.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/coding-socks/lost-in-translation.git",
+                "reference": "e513b493352843e7d45263afafbdd77efe947b0e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/coding-socks/lost-in-translation/zipball/e513b493352843e7d45263afafbdd77efe947b0e",
+                "reference": "e513b493352843e7d45263afafbdd77efe947b0e",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/console": "^9.0 || ^10.0 || ^11.0 || ^12.0",
+                "illuminate/filesystem": "^9.0 || ^10.0 || ^11.0 || ^12.0",
+                "illuminate/support": "^9.0 || ^10.0 || ^11.0 || ^12.0",
+                "illuminate/translation": "^9.0 || ^10.0 || ^11.0 || ^12.0",
+                "illuminate/view": "^9.0 || ^10.0 || ^11.0 || ^12.0",
+                "nikic/php-parser": "^4.18 || ^5.0",
+                "php": "^8.0"
+            },
+            "require-dev": {
+                "orchestra/testbench": "^7.3 || ^8.0 || ^9.0 || ^10.0",
+                "phpunit/phpunit": "^9.5 || ^10.5 || ^11.5"
+            },
+            "type": "library",
+            "extra": {
+                "laravel": {
+                    "providers": [
+                        "CodingSocks\\LostInTranslation\\LostInTranslationServiceProvider"
+                    ]
+                },
+                "branch-alias": {
+                    "dev-main": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "CodingSocks\\LostInTranslation\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "László Görög",
+                    "homepage": "https://github.com/nerg4l"
+                }
+            ],
+            "description": "This package helps to find missing translation strings in your Laravel blade files",
+            "support": {
+                "issues": "https://github.com/coding-socks/lost-in-translation/issues",
+                "source": "https://github.com/coding-socks/lost-in-translation/tree/v0.3.5"
+            },
+            "time": "2025-07-23T08:34:38+00:00"
+        },
+        {
             "name": "driftingly/rector-laravel",
             "version": "2.0.6",
             "source": {
@@ -12641,6 +12701,6 @@
     "platform": {
         "php": "^8.2"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "plugin-api-version": "2.6.0"
 }
