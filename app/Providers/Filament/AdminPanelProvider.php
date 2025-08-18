@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Providers\Filament;
 
+use App\Enums\Icons\PhosphorIcons;
 use App\Filament\Pages\Auth\Register;
 use App\Filament\Pages\Settings\ContactChannelsSettingsPage;
 use App\Filament\Pages\Settings\GeneralSettingsPage;
@@ -59,12 +60,12 @@ class AdminPanelProvider extends PanelProvider
                 NavigationGroup::make()
                     ->collapsible()
                     ->label(fn () => __('Shipments Management'))
-                    ->icon('phosphor-package-duotone'),
+                    ->icon(PhosphorIcons::PackageDuotone),
 
                 NavigationGroup::make()
                     ->collapsible()
                     ->label(fn () => __('Users Management'))
-                    ->icon('phosphor-users-duotone'),
+                    ->icon(PhosphorIcons::UsersDuotone),
 
                 NavigationGroup::make()
                     ->collapsible()
@@ -73,12 +74,12 @@ class AdminPanelProvider extends PanelProvider
                 NavigationGroup::make()
                     ->collapsible()
                     ->label(fn () => __('Financial Operations'))
-                    ->icon('phosphor-vault-duotone'),
+                    ->icon(PhosphorIcons::VaultDuotone),
 
                 NavigationGroup::make()
                     ->collapsible()
                     ->label(fn () => __('Countries Management'))
-                    ->icon('phosphor-globe-stand-duotone'),
+                    ->icon(PhosphorIcons::GlobeStandDuotone),
 
                 NavigationGroup::make()
                     ->collapsible()
@@ -91,7 +92,7 @@ class AdminPanelProvider extends PanelProvider
                 NavigationGroup::make()
                     ->collapsible()
                     ->label(fn () => __('Settings'))
-                    ->icon('phosphor-gear-duotone'),
+                    ->icon(PhosphorIcons::GearDuotone),
             ])
             ->navigationItems([
                 NavigationItem::make('new_shipment')

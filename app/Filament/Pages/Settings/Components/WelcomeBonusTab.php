@@ -4,8 +4,10 @@ declare(strict_types=1);
 
 namespace App\Filament\Pages\Settings\Components;
 
+use App\Enums\Icons\PhosphorIcons;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Support\Icons\Heroicon;
 
 class WelcomeBonusTab
 {
@@ -13,13 +15,13 @@ class WelcomeBonusTab
     {
         return Tab::make(__('Welcome Bonus'))
             ->columns(2)
-            ->icon('phosphor-confetti-duotone')
+            ->icon(PhosphorIcons::ConfettiDuotone)
             ->schema([
                 TextInput::make('welcome_bonus')
                     ->label(__('Welcome Bonus Points'))
                     ->numeric()
                     ->hintIcon(
-                        icon: 'heroicon-o-information-circle',
+                        icon: Heroicon::InformationCircle,
                         tooltip: __('The points a newly registered user receives upon successful registration as a welcome bonus.')
                     )
                     ->hintColor('info')
