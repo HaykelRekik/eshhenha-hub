@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Enums;
 
+use BackedEnum;
 use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasIcon;
 use Filament\Support\Contracts\HasLabel;
@@ -31,7 +32,7 @@ enum WalletTransactionType: string implements HasColor, HasIcon, HasLabel
         };
     }
 
-    public function getIcon(): string|null|\BackedEnum
+    public function getIcon(): string|null|BackedEnum
     {
         return match ($this) {
             self::DEPOSIT => Heroicon::ArrowDownTray,

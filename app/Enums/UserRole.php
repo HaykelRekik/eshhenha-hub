@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Enums;
 
 use App\Enums\Icons\PhosphorIcons;
+use BackedEnum;
 use Filament\Support\Colors\Color;
 use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasIcon;
@@ -30,7 +31,7 @@ enum UserRole: string implements HasColor, HasIcon, HasLabel
         };
     }
 
-    public function getIcon(): string|null|\BackedEnum
+    public function getIcon(): string|null|BackedEnum
     {
         return match ($this) {
             self::ADMIN => PhosphorIcons::ShieldStarDuotone,
