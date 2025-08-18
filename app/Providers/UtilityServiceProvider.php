@@ -8,6 +8,8 @@ use App\Enums\Icons\PhosphorIcons;
 use BezhanSalleh\FilamentLanguageSwitch\LanguageSwitch;
 use Filament\Actions\CreateAction;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\ToggleButtons;
+use Filament\Schemas\Components\Section;
 use Filament\Tables\Table;
 use Illuminate\Support\ServiceProvider;
 
@@ -34,6 +36,10 @@ class UtilityServiceProvider extends ServiceProvider
             ->defaultDateTimeDisplayFormat(format: 'd M Y , h:i A'));
 
         Select::configureUsing(modifyUsing: fn (Select $select): Select => $select->native(false));
+
+        Section::configureUsing(modifyUsing: fn (Section $section): Section => $section->columns(2)->columnSpanFull());
+
+        ToggleButtons::configureUsing(modifyUsing: fn (ToggleButtons $toggleButtons): ToggleButtons => $toggleButtons->inline());
 
     }
 }

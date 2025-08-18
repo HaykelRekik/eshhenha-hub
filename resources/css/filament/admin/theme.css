@@ -5,3 +5,86 @@
 
 @source '../../../../vendor/bezhansalleh/filament-language-switch/resources/views/**/*.blade.php';
 
+
+/** Normal font-weight for new riyal symbol */
+
+.icon-saudi_riyal::before {
+    font-weight: 500;
+}
+
+@font-face {
+    font-family: 'saudi_riyal';
+    src: url("@emran-alhaddad/saudi-riyal-font/fonts/saudi_riyal.woff2") format('woff2'),
+    url('@emran-alhaddad/saudi-riyal-font/fonts/saudi_riyal.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+    font-display: block;
+}
+
+[class^="icon-"], [class*=" icon-"] {
+    font-family: 'saudi_riyal' !important;
+    speak: never;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-saudi_riyal:before {
+    content: "\e900";
+}
+
+
+/** Applies a blur effect to modals */
+.fi-modal-close-overlay {
+    @apply backdrop-blur-xs;
+}
+
+
+/** Custom scrollbar to scrollable sections */
+@media (min-width: 768px) {
+    ::-webkit-scrollbar {
+        height: 5px;
+        width: 5px
+    }
+
+    ::-webkit-scrollbar-track {
+        background: #e5e7eb
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #d1d5db
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: #c9cbcd
+    }
+
+    .dark ::-webkit-scrollbar-track {
+        background: #101215
+    }
+
+    .dark ::-webkit-scrollbar-thumb {
+        background: #1f2126
+    }
+
+    .dark ::-webkit-scrollbar-thumb:hover {
+        background: #1a1d21
+    }
+
+    @supports (-moz-appearance: none) {
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: #d1d5db #e5e7eb;
+        }
+
+        .dark,
+        .dark * {
+            scrollbar-color: #1f2126 #101215;
+        }
+    }
+}
