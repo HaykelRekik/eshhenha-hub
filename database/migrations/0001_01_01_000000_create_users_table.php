@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Enums\UserRole;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -16,10 +17,53 @@ return new class() extends Migration
         Schema::create('users', function (Blueprint $table): void {
             $table->id();
             $table->string('name');
-            $table->string('email')->unique();
-            $table->timestamp('email_verified_at')->nullable();
+
+            $table->string('email')
+                ->unique();
+
+            $table->timestamp('email_verified_at')
+                ->nullable();
+
             $table->string('password');
+
+            $table->string('phone_number')
+                ->unique()
+                ->nullable();
+
+            $table->string('national_id')
+                ->unique()
+                ->nullable()
+                ->comment('The national id number or iqama number for a user');
+
+            $table->string('avatar_url')
+                ->nullable();
+
+            $table->unsignedInteger('loyalty_points')
+                ->default(0);
+
+            $table->string('role')
+                ->default(UserRole::USER);
+
+            $table->boolean('is_active')
+                ->default(true);
+
+            $table->string('referral_code')
+                ->nullable()
+                ->unique();
+
+            $table->foreignId('referred_by')
+                ->nullable()
+                ->constrained('users')
+                ->nullOnDelete()
+                ->comment('The user who referred this user');
+
             $table->rememberToken();
+
+            $table->timestamp('last_login_at')
+                ->nullable();
+
+            $table->ipAddress('last_login_ip')
+                ->nullable();
             $table->timestamps();
         });
 

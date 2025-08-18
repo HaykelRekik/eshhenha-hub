@@ -9,10 +9,12 @@ use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
+use Filament\Navigation\NavigationGroup;
 use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
+use Filament\Support\Enums\Width;
 use Filament\Widgets\AccountWidget;
 use Filament\Widgets\FilamentInfoWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
@@ -44,6 +46,7 @@ class AdminPanelProvider extends PanelProvider
             ->font('Ibm Plex Sans Arabic')
             ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
             ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
+            ->maxContentWidth(Width::Full)
             ->pages([
                 Dashboard::class,
             ])
@@ -51,6 +54,44 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                 AccountWidget::class,
                 FilamentInfoWidget::class,
+            ])
+            ->navigationGroups([
+                NavigationGroup::make()
+                    ->collapsible()
+                    ->label(fn () => __('Shipments Management'))
+                    ->icon('phosphor-package-duotone'),
+
+                NavigationGroup::make()
+                    ->collapsible()
+                    ->label(fn () => __('Users Management'))
+                    ->icon('phosphor-users-duotone'),
+
+                NavigationGroup::make()
+                    ->collapsible()
+                    ->label(fn () => __('Companies Management')),
+
+                NavigationGroup::make()
+                    ->collapsible()
+                    ->label(fn () => __('Financial Operations'))
+                    ->icon('phosphor-vault-duotone'),
+
+                NavigationGroup::make()
+                    ->collapsible()
+                    ->label(fn () => __('Countries Management'))
+                    ->icon('phosphor-globe-stand-duotone'),
+
+                NavigationGroup::make()
+                    ->collapsible()
+                    ->label(fn () => __('Contact and Help Center')),
+
+                NavigationGroup::make()
+                    ->collapsible()
+                    ->label(fn () => __('Content Management')),
+
+                NavigationGroup::make()
+                    ->collapsible()
+                    ->label(fn () => __('Settings'))
+                    ->icon('phosphor-gear-duotone'),
             ])
             ->middleware([
                 EncryptCookies::class,
