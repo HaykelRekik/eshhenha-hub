@@ -8,6 +8,7 @@ use App\Filament\Resources\Wallets\Pages\CreateWallet;
 use App\Filament\Resources\Wallets\Pages\EditWallet;
 use App\Filament\Resources\Wallets\Pages\ListWallets;
 use App\Filament\Resources\Wallets\Pages\ViewWallet;
+use App\Filament\Resources\Wallets\RelationManagers\TransactionsRelationManager;
 use App\Filament\Resources\Wallets\Schemas\WalletForm;
 use App\Filament\Resources\Wallets\Schemas\WalletInfolist;
 use App\Filament\Resources\Wallets\Tables\WalletsTable;
@@ -40,7 +41,7 @@ class WalletResource extends Resource
     public static function getRelations(): array
     {
         return [
-
+            TransactionsRelationManager::class,
         ];
     }
 
@@ -69,8 +70,8 @@ class WalletResource extends Resource
         return __('Financial Operations');
     }
 
-    public static function canCreate(): bool
-    {
-        return false;
-    }
+    //    public static function canCreate(): bool
+    //    {
+    //        return false;
+    //    }
 }
