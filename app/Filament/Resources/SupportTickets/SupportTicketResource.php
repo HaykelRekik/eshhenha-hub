@@ -20,8 +20,7 @@ class SupportTicketResource extends Resource
 {
     protected static ?string $model = SupportTicket::class;
 
-    protected static string | BackedEnum | null $navigationIcon = PhosphorIcons::StickerDuotone;
-
+    protected static string|BackedEnum|null $navigationIcon = PhosphorIcons::StickerDuotone;
 
     public static function form(Schema $schema): Schema
     {
