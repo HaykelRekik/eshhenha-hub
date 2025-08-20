@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Pages\Settings;
 
+use App\Enums\UserRole;
 use App\Filament\Pages\Settings\Components\ReferralSystemTab;
 use App\Filament\Pages\Settings\Components\WelcomeBonusTab;
 use App\Settings\RewardSettings;
@@ -32,6 +33,11 @@ class RewardSettingsPage extends SettingsPage
         return __('Settings');
     }
 
+    public static function canAccess(): bool
+    {
+        return auth()->user()->hasRole(UserRole::ADMIN);
+    }
+
     public function getTitle(): string
     {
         return __('Rewards Settings');
@@ -42,7 +48,6 @@ class RewardSettingsPage extends SettingsPage
         return $schema
             ->components([
                 Tabs::make(__('Referral System'))
-
                     ->components([
                         ReferralSystemTab::make(),
                         WelcomeBonusTab::make(),

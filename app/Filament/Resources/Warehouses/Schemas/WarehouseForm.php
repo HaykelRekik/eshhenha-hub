@@ -39,7 +39,7 @@ class WarehouseForm
                                     ->label(__('Company'))
                                     ->relationship('company', 'name')
                                     ->visible(auth()->user()->hasRole(UserRole::ADMIN))
-                                    ->disabled(!auth()->user()->hasRole(UserRole::ADMIN))
+                                    ->disabled( ! auth()->user()->hasRole(UserRole::ADMIN))
                                     ->required()
                                     ->preload()
                                     ->searchable(),

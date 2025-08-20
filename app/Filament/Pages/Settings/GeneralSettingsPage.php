@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Pages\Settings;
 
+use App\Enums\UserRole;
 use App\Filament\Pages\Settings\Components\GeneralTab;
 use App\Filament\Pages\Settings\Components\SeoTab;
 use App\Settings\GeneralSettings;
@@ -30,6 +31,11 @@ class GeneralSettingsPage extends SettingsPage
     public static function getNavigationGroup(): ?string
     {
         return __('Settings');
+    }
+
+    public static function canAccess(): bool
+    {
+        return auth()->user()->hasRole(UserRole::ADMIN);
     }
 
     public function form(Schema $schema): Schema
