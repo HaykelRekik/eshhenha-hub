@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Warehouses\Schemas;
 
+use App\Enums\UserRole;
 use App\Filament\Support\Components\AddressBloc;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -37,6 +38,8 @@ class WarehouseForm
                                 Select::make('company_id')
                                     ->label(__('Company'))
                                     ->relationship('company', 'name')
+                                    ->visible(auth()->user()->hasRole(UserRole::ADMIN))
+                                    ->disabled(!auth()->user()->hasRole(UserRole::ADMIN))
                                     ->required()
                                     ->preload()
                                     ->searchable(),
