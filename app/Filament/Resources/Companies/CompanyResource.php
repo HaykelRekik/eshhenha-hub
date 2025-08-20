@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Companies;
 
+use App\Filament\Resources\Companies\RelationManagers\WarehousesRelationManager;
 use App\Filament\Resources\Companies\Pages\CreateCompany;
 use App\Filament\Resources\Companies\Pages\EditCompany;
 use App\Filament\Resources\Companies\Pages\ListCompanies;
@@ -31,13 +32,6 @@ class CompanyResource extends Resource
         return CompaniesTable::configure($table);
     }
 
-    public static function getRelations(): array
-    {
-        return [
-
-        ];
-    }
-
     public static function getPages(): array
     {
         return [
@@ -45,5 +39,27 @@ class CompanyResource extends Resource
             'create' => CreateCompany::route('/create'),
             'edit' => EditCompany::route('/{record}/edit'),
         ];
+    }
+
+    public static function getLabel(): ?string
+    {
+        return __('Company');
+    }
+
+    public static function getPluralLabel(): ?string
+    {
+        return __('Companies');
+    }
+
+    public static function getRelations(): array
+    {
+        return [
+            WarehousesRelationManager::class,
+        ];
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Companies Management');
     }
 }

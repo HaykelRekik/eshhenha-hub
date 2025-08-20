@@ -40,12 +40,12 @@ class CompanyForm
                             ->createOptionUsing(fn (array $data): int => User::create([
                                 ...$data,
                                 'role' => UserRole::COMPANY,
-                            ])
-                                ->getKey()),
+                            ])->getKey()),
 
                         TextInput::make('name')
                             ->label(__('Company Name'))
                             ->required(),
+
                         TextInput::make('email')
                             ->label(__('Contact Email'))
                             ->required()

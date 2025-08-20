@@ -5,7 +5,8 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Enums\Icons\PhosphorIcons;
-use BezhanSalleh\FilamentLanguageSwitch\LanguageSwitch;
+
+use BezhanSalleh\LanguageSwitch\LanguageSwitch;
 use Filament\Actions\CreateAction;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
