@@ -18,6 +18,8 @@ class Company extends Model
         'name',
         'email',
         'phone_number',
+        'cr_number',
+        'vat_number',
         'logo',
         'is_active',
         'user_id',

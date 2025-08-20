@@ -16,7 +16,7 @@ class CountryForm
         return $schema
             ->components([
                 Section::make()
-
+                    ->columnSpanFull()
                     ->columns(3)
                     ->schema([
                         TextInput::make('name_ar')

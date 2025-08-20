@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace App\Filament\Resources\PricingRules;
 
 use App\Filament\Resources\PricingRules\Pages\CreatePricingRule;
@@ -11,7 +13,6 @@ use App\Models\PricingRule;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
 class PricingRuleResource extends Resource
@@ -35,7 +36,7 @@ class PricingRuleResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
+
         ];
     }
 

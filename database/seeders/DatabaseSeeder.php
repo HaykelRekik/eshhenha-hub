@@ -28,7 +28,6 @@ class DatabaseSeeder extends Seeder
                 CountrySeeder::class,
                 RegionSeeder::class,
                 CitySeeder::class,
-                SettingsSeeder::class,
             ]
         );
 

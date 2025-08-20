@@ -66,7 +66,6 @@ class UtilityServiceProvider extends ServiceProvider
         foreach ([
             Section::class,
             Grid::class,
-            Tabs::class,
             Fieldset::class,
         ] as $component) {
             /** @var $component Section|Grid|Tabs|Fieldset */
@@ -74,6 +73,8 @@ class UtilityServiceProvider extends ServiceProvider
                 modifyUsing: fn ($instance) => $instance->columns(2)->columnSpanFull()
             );
         }
+
+        Tabs::configureUsing(modifyUsing: fn (Tabs $tabs): Tabs => $tabs->columnSpanFull());
 
         FileUpload::configureUsing(fn (FileUpload $fileUpload): FileUpload => $fileUpload
             ->visibility('public'));

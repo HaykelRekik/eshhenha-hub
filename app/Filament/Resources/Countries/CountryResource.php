@@ -35,8 +35,8 @@ class CountryResource extends Resource
     public static function getRelations(): array
     {
         return [
-            RegionsRelationManager::class,
-            CitiesRelationManager::class,
+            'regions' => RegionsRelationManager::class,
+            'cities' => CitiesRelationManager::class,
         ];
     }
 

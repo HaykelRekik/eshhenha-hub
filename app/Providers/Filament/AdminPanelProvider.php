@@ -117,21 +117,21 @@ class AdminPanelProvider extends PanelProvider
                 NavigationItem::make('all')
                     ->label(fn (): string => __('All accounts'))
                     ->isActiveWhen(fn (): bool => 'all' === request()->get('tab'))
-                    ->visible(auth()->check() && auth()->user()->hasRole(UserRole::ADMIN))
+                    ->visible(fn (): bool => auth()->check() && auth()->user()->hasRole(UserRole::ADMIN))
                     ->url(fn (): string => UserResource::getUrl('index') . '?tab=all')
                     ->group(fn (): string => __('Users Management')),
 
                 NavigationItem::make('admins')
                     ->label(fn (): string => __('Administration'))
                     ->isActiveWhen(fn (): bool => 'admins' === request()->get('tab'))
-                    ->visible(auth()->check() && auth()->user()->hasRole(UserRole::ADMIN))
+                    ->visible(fn (): bool => auth()->check() && auth()->user()->hasRole(UserRole::ADMIN))
                     ->url(fn (): string => UserResource::getUrl('index') . '?tab=admins')
                     ->group(fn (): string => __('Users Management')),
 
                 NavigationItem::make('customers')
                     ->label(fn (): string => __('Customers'))
                     ->isActiveWhen(fn (): bool => 'users' === request()->get('tab'))
-                    ->visible(auth()->check() && auth()->user()->hasRole(UserRole::ADMIN))
+                    ->visible(fn (): bool => auth()->check() && auth()->user()->hasRole(UserRole::ADMIN))
                     ->url(fn (): string => UserResource::getUrl('index') . '?tab=users')
                     ->group(fn (): string => __('Users Management')),
             ])

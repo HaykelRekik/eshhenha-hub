@@ -14,7 +14,7 @@ class EditCompany extends EditRecord
 
     public function hasCombinedRelationManagerTabsWithContent(): bool
     {
-        return false;
+        return true;
     }
 
     protected function getHeaderActions(): array

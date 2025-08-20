@@ -7,6 +7,8 @@ namespace App\Filament\Resources\Companies\Schemas;
 use App\Enums\UserRole;
 
 use App\Models\User;
+use App\Rules\CRNumber;
+use App\Rules\VATNumber;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -76,6 +78,22 @@ class CompanyForm
                                 falseLabel: __('Inactive'),
                             )
                             ->required(),
+
+                        TextInput::make('cr_number')
+                            ->label(__('CR Number'))
+                            ->required()
+                            ->maxLength(10)
+                            ->rules([
+                                new CRNumber(),
+                            ]),
+
+                        TextInput::make('vat_number')
+                            ->label(__('VAT Number'))
+                            ->required()
+                            ->maxLength(15)
+                            ->rules([
+                                new VATNumber(),
+                            ]),
 
                         FileUpload::make('logo')
                             ->label(__('Company Logo'))
