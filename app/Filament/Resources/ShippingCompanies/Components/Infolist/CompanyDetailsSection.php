@@ -28,6 +28,7 @@ final class CompanyDetailsSection
                             ->label(__('Company Logo'))
                             ->imageHeight(120)
                             ->hiddenLabel()
+                            ->visibility('public')
                             ->circular(),
                     ])->columnSpan(1),
 

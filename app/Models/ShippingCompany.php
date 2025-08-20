@@ -6,9 +6,11 @@ namespace App\Models;
 
 use App\Enums\ShippingCompanyInsuranceType;
 use App\Enums\ShippingRange;
+use App\Policies\ShippingCompanyPolicy;
 use App\Traits\HasActiveScope;
 use App\Traits\HasAddresses;
 use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -17,6 +19,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\HtmlString;
 
+#[UsePolicy(ShippingCompanyPolicy::class)]
 class ShippingCompany extends Model
 {
     use HasActiveScope, HasAddresses, HasFactory;

@@ -13,7 +13,7 @@ class SwiftCode implements ValidationRule
     {
         $swift = mb_strtoupper(trim((string) $value));
 
-        if ( in_array(preg_match('/^[A-Z]{4}[A-Z]{2}[A-Z0-9]{2}([A-Z0-9]{3})?$/', $swift), [0, false], true)) {
+        if (in_array(preg_match('/^[A-Z]{4}[A-Z]{2}[A-Z0-9]{2}([A-Z0-9]{3})?$/', $swift), [0, false], true)) {
             $fail(__('The :attribute must be a valid SWIFT/BIC code.'));
         }
     }

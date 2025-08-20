@@ -95,7 +95,8 @@ class AdminPanelProvider extends PanelProvider
 
                 NavigationGroup::make()
                     ->collapsible()
-                    ->label(fn () => __('Content Management')),
+                    ->label(fn () => __('Content Management'))
+                    ->icon(PhosphorIcons::FilesDuotone),
 
                 NavigationGroup::make()
                     ->collapsible()

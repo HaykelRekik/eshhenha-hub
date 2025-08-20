@@ -15,7 +15,7 @@ class SaudiIBAN implements ValidationRule
         $iban = mb_strtoupper(str_replace(' ', '', $value));
 
         // Check format: starts with SA + 22 digits
-        if ( in_array(preg_match('/^SA\d{22}$/', $iban), [0, false], true)) {
+        if (in_array(preg_match('/^SA\d{22}$/', $iban), [0, false], true)) {
             $fail(__('The :attribute must be a valid Saudi IBAN.'));
 
             return;
