@@ -9,6 +9,7 @@ use App\Enums\UserRole;
 use App\Filament\Pages\Auth\Register;
 use App\Filament\Pages\Settings\ContactChannelsSettingsPage;
 use App\Filament\Pages\Settings\GeneralSettingsPage;
+use App\Filament\Pages\Settings\LoyaltyConversionSettingsPage;
 use App\Filament\Pages\Settings\RewardSettingsPage;
 use App\Filament\Resources\Users\UserResource;
 use Filament\Http\Middleware\Authenticate;
@@ -61,6 +62,7 @@ class AdminPanelProvider extends PanelProvider
             ->pages([
                 Dashboard::class,
                 GeneralSettingsPage::class,
+                LoyaltyConversionSettingsPage::class,
                 ContactChannelsSettingsPage::class,
                 RewardSettingsPage::class,
             ])

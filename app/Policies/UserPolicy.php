@@ -32,6 +32,7 @@ class UserPolicy
         if ($user->hasRole(UserRole::ADMIN)) {
             return true;
         }
+
         return $user->id === $model->id;
     }
 
