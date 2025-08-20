@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\ShippingCompanies\Components\Form;
 
+use App\Rules\SaudiIBAN;
+use App\Rules\SwiftCode;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Wizard\Step;
 
@@ -26,11 +28,13 @@ final class BankInformationStep
 
                 TextInput::make('iban')
                     ->label(__('IBAN'))
-                    ->required(),
+                    ->required()
+                    ->rules([new SaudiIBAN()]),
 
                 TextInput::make('swift')
                     ->label(__('Swift'))
-                    ->required(),
+                    ->required()
+                    ->rules([new SwiftCode()]),
             ]);
     }
 }

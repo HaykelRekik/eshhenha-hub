@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources\ShippingCompanies\Actions;
 
 use App\Enums\Icons\PhosphorIcons;
+use App\Filament\Resources\PricingRules\PricingRuleResource;
 use Filament\Actions\Action;
 use Filament\Support\Colors\Color;
 
@@ -16,7 +17,7 @@ class ManagePricingRulesAction
             ->label(__('Pricing rules management'))
             ->color(Color::Rose)
             ->outlined()
-            ->icon(PhosphorIcons::BookBookmarkDuotone);
-        //            ->url(PricingRuleResource::getUrl('index')),
+            ->icon(PhosphorIcons::BookBookmarkDuotone)
+            ->url(PricingRuleResource::getUrl('index'));
     }
 }

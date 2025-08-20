@@ -5,9 +5,11 @@ declare(strict_types=1);
 namespace App\Providers\Filament;
 
 use App\Enums\Icons\PhosphorIcons;
+use App\Enums\UserRole;
 use App\Filament\Pages\Auth\Register;
 use App\Filament\Pages\Settings\ContactChannelsSettingsPage;
 use App\Filament\Pages\Settings\GeneralSettingsPage;
+use App\Filament\Pages\Settings\LoyaltyConversionSettingsPage;
 use App\Filament\Pages\Settings\RewardSettingsPage;
 use App\Filament\Resources\Users\UserResource;
 use Filament\Http\Middleware\Authenticate;
@@ -48,6 +50,7 @@ class AdminPanelProvider extends PanelProvider
                 'warning' => Color::hex('#ffb347'),
             ])
             ->resourceEditPageRedirect('index')
+            ->resourceCreatePageRedirect('index')
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->font('Ibm Plex Sans Arabic')
             ->brandLogo(asset('images/logo.png'))
@@ -59,6 +62,7 @@ class AdminPanelProvider extends PanelProvider
             ->pages([
                 Dashboard::class,
                 GeneralSettingsPage::class,
+                LoyaltyConversionSettingsPage::class,
                 ContactChannelsSettingsPage::class,
                 RewardSettingsPage::class,
             ])
@@ -75,7 +79,8 @@ class AdminPanelProvider extends PanelProvider
 
                 NavigationGroup::make()
                     ->collapsible()
-                    ->label(fn () => __('Companies Management')),
+                    ->label(fn () => __('Companies Management'))
+                    ->icon(PhosphorIcons::BuildingOfficeDuotone),
 
                 NavigationGroup::make()
                     ->collapsible()
@@ -93,7 +98,8 @@ class AdminPanelProvider extends PanelProvider
 
                 NavigationGroup::make()
                     ->collapsible()
-                    ->label(fn () => __('Content Management')),
+                    ->label(fn () => __('Content Management'))
+                    ->icon(PhosphorIcons::FilesDuotone),
 
                 NavigationGroup::make()
                     ->collapsible()
@@ -111,18 +117,21 @@ class AdminPanelProvider extends PanelProvider
                 NavigationItem::make('all')
                     ->label(fn (): string => __('All accounts'))
                     ->isActiveWhen(fn (): bool => 'all' === request()->get('tab'))
+                    ->visible(auth()->check() && auth()->user()->hasRole(UserRole::ADMIN))
                     ->url(fn (): string => UserResource::getUrl('index') . '?tab=all')
                     ->group(fn (): string => __('Users Management')),
 
                 NavigationItem::make('admins')
                     ->label(fn (): string => __('Administration'))
                     ->isActiveWhen(fn (): bool => 'admins' === request()->get('tab'))
+                    ->visible(auth()->check() && auth()->user()->hasRole(UserRole::ADMIN))
                     ->url(fn (): string => UserResource::getUrl('index') . '?tab=admins')
                     ->group(fn (): string => __('Users Management')),
 
                 NavigationItem::make('customers')
                     ->label(fn (): string => __('Customers'))
                     ->isActiveWhen(fn (): bool => 'users' === request()->get('tab'))
+                    ->visible(auth()->check() && auth()->user()->hasRole(UserRole::ADMIN))
                     ->url(fn (): string => UserResource::getUrl('index') . '?tab=users')
                     ->group(fn (): string => __('Users Management')),
             ])

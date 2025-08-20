@@ -5,11 +5,14 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Enums\Icons\PhosphorIcons;
-use BezhanSalleh\FilamentLanguageSwitch\LanguageSwitch;
+
+use BezhanSalleh\LanguageSwitch\LanguageSwitch;
 use Filament\Actions\CreateAction;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
+use Filament\Infolists\Components\ImageEntry;
 use Filament\Schemas\Components\Fieldset;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
@@ -71,6 +74,15 @@ class UtilityServiceProvider extends ServiceProvider
                 modifyUsing: fn ($instance) => $instance->columns(2)->columnSpanFull()
             );
         }
+
+        FileUpload::configureUsing(fn (FileUpload $fileUpload): FileUpload => $fileUpload
+            ->visibility('public'));
+
+        ImageColumn::configureUsing(fn (ImageColumn $imageColumn): ImageColumn => $imageColumn
+            ->visibility('public'));
+
+        ImageEntry::configureUsing(fn (ImageEntry $imageEntry): ImageEntry => $imageEntry
+            ->visibility('public'));
 
     }
 }

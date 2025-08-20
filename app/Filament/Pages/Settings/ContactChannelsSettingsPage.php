@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Pages\Settings;
 
+use App\Enums\UserRole;
 use App\Filament\Pages\Settings\Components\ContactInformationTab;
 use App\Filament\Pages\Settings\Components\SocialMediaTab;
 use App\Settings\ContactChannelsSettings;
@@ -32,6 +33,11 @@ class ContactChannelsSettingsPage extends SettingsPage
         return __('Settings');
     }
 
+    public static function canAccess(): bool
+    {
+        return auth()->user()->hasRole(UserRole::ADMIN);
+    }
+
     public function getTitle(): string
     {
         return __('Contact Channels Settings');
@@ -42,7 +48,6 @@ class ContactChannelsSettingsPage extends SettingsPage
         return $schema
             ->components([
                 Tabs::make()
-
                     ->components([
                         SocialMediaTab::make(),
                         ContactInformationTab::make(),

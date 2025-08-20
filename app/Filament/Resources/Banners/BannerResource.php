@@ -10,10 +10,13 @@ use App\Filament\Resources\Banners\Pages\ListBanners;
 use App\Filament\Resources\Banners\Schemas\BannerForm;
 use App\Filament\Resources\Banners\Tables\BannersTable;
 use App\Models\Banner;
+use App\Policies\BannerPolicy;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 
+#[UsePolicy(BannerPolicy::class)]
 class BannerResource extends Resource
 {
     protected static ?string $model = Banner::class;
