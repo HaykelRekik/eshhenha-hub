@@ -48,6 +48,7 @@ class AdminPanelProvider extends PanelProvider
                 'warning' => Color::hex('#ffb347'),
             ])
             ->resourceEditPageRedirect('index')
+            ->resourceCreatePageRedirect('index')
             ->viteTheme('resources/css/filament/admin/theme.css')
             ->font('Ibm Plex Sans Arabic')
             ->brandLogo(asset('images/logo.png'))
@@ -75,7 +76,8 @@ class AdminPanelProvider extends PanelProvider
 
                 NavigationGroup::make()
                     ->collapsible()
-                    ->label(fn () => __('Companies Management')),
+                    ->label(fn () => __('Companies Management'))
+                    ->icon(PhosphorIcons::BuildingOfficeDuotone),
 
                 NavigationGroup::make()
                     ->collapsible()

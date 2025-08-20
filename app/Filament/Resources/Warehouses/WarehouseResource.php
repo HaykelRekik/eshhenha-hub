@@ -13,14 +13,13 @@ use App\Models\Warehouse;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
 class WarehouseResource extends Resource
 {
     protected static ?string $model = Warehouse::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = null;
 
     public static function form(Schema $schema): Schema
     {
@@ -46,5 +45,20 @@ class WarehouseResource extends Resource
             'create' => CreateWarehouse::route('/create'),
             'edit' => EditWarehouse::route('/{record}/edit'),
         ];
+    }
+
+    public static function getLabel(): ?string
+    {
+        return __('warehouse');
+    }
+
+    public static function getPluralLabel(): ?string
+    {
+        return __('Warehouses');
+    }
+
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Companies Management');
     }
 }
