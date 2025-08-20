@@ -42,6 +42,7 @@ class AdminPanelProvider extends PanelProvider
             ->path('hub')
             ->login()
             ->registration(Register::class)
+            ->passwordReset()
             ->profile(isSimple: false)
             ->colors([
                 'primary' => Color::Blue,

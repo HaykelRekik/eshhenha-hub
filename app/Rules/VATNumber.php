@@ -17,8 +17,8 @@ class VATNumber implements ValidationRule
          * First digit should be 3.
          * Last digit is a check digit (mod-11 check, but most systems just enforce 15 digits starting with 3).
          */
-        if ( ! preg_match('/^3[0-9]{14}$/', $value)) {
-            $fail("The VAT Number must be a valid Saudi VAT number.");
+        if (in_array(preg_match('/^3\d{14}$/', (string) $value), [0, false], true)) {
+            $fail('The VAT Number must be a valid Saudi VAT number.');
         }
     }
 }

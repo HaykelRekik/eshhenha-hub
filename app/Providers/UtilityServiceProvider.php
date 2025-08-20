@@ -19,6 +19,7 @@ use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Wizard;
 use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\ServiceProvider;
 use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
@@ -52,6 +53,8 @@ class UtilityServiceProvider extends ServiceProvider
         ToggleButtons::configureUsing(modifyUsing: fn (ToggleButtons $toggleButtons): ToggleButtons => $toggleButtons->inline());
 
         TextInput::configureUsing(modifyUsing: fn (TextInput $input): TextInput => $input->maxLength(255));
+
+        TextColumn::configureUsing(modifyUsing: fn (TextColumn $column): TextColumn => $column->placeholder(__('Not specified')));
 
         ImageColumn::configureUsing(modifyUsing: fn (ImageColumn $column): ImageColumn => $column->extraImgAttributes(['loading' => 'lazy']));
 

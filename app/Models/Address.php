@@ -18,6 +18,7 @@ class Address extends Model
         'label',
         'contact_name',
         'contact_phone_number',
+        'is_recipient_address',
         'street',
         'zip_code',
         'is_default',

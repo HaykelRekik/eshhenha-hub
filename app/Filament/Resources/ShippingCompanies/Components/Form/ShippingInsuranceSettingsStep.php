@@ -16,7 +16,6 @@ use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Components\Wizard\Step;
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Support\HtmlString;
 
 final class ShippingInsuranceSettingsStep
 {
@@ -30,7 +29,6 @@ final class ShippingInsuranceSettingsStep
                 Fieldset::make()
                     ->label(__('Shipping'))
                     ->schema([
-
                         Select::make('delivery_zones')
                             ->label(__('Delivery zones'))
                             ->multiple()
@@ -90,38 +88,49 @@ final class ShippingInsuranceSettingsStep
                             ->default(ShippingCompanyInsuranceType::PERCENTAGE)
                             ->inline()
                             ->required()
-                            ->afterStateUpdated(function ($state, Set $set, Get $get): void {
-                                if ($get('insurance_value')) {
-                                    $currentValue = (float) $get('insurance_value');
+                            ->afterStateUpdatedJs(
+                                <<<'JS'
 
-                                    if (ShippingCompanyInsuranceType::PERCENTAGE === $state && $currentValue > 100) {
-                                        $set('insurance_value', 100);
-                                    }
+                                if ($get('insurance_value') > 100 && $get('insurance_type') === 'percentage' ) {
+                                    $set('insurance_value' , 100)
                                 }
-                            })
-                            ->reactive(),
+
+                        JS
+                            ),
+
+                        /**
+                         * Workaround to dynamically display the suffix symbol based on insurance type
+                         */
+                        TextInput::make('insurance_value')
+                            ->label(__('Insurance Value'))
+                            ->required()
+                            ->saudiRiyal()
+                            ->maxLength(null)
+                            ->numeric()
+                            ->visibleJs(
+                                <<<'JS'
+                                $get('insurance_type') === 'amount'
+                            JS
+                            )
+                            ->minValue(1),
 
                         TextInput::make('insurance_value')
                             ->label(__('Insurance Value'))
                             ->required()
+                            ->suffix('%')
                             ->maxLength(null)
                             ->numeric()
-                            ->suffix(function (Get $get) {
-                                static $lastType = null;
-                                static $lastSuffix = null;
+                            ->maxValue(100)
+                            ->visibleJs(
+                                <<<'JS'
+                                $get('insurance_type') === 'percentage'
+                            JS
+                            )
+                            ->minValue(1),
 
-                                $currentType = $get('insurance_type');
-
-                                if ($lastType !== $currentType) {
-                                    $lastType = $currentType;
-                                    $lastSuffix = ShippingCompanyInsuranceType::PERCENTAGE === $currentType ? '%' : new HtmlString(view('filament.components.saudi-riyal'));
-                                }
-
-                                return $lastSuffix;
-                            })
-                            ->maxValue(fn (Get $get): ?int => ShippingCompanyInsuranceType::PERCENTAGE === $get('insurance_type') ? 100 : null)
-                            ->minValue(1)
-                            ->reactive(),
+                    /**
+                     * End Workaround to dynamically display the suffix symbol based on insurance type
+                     */
                     ]),
             ]);
     }

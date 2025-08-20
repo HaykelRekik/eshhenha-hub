@@ -17,8 +17,8 @@ class CRNumber implements ValidationRule
          * Only digits allowed.
          * Sometimes the first digit indicates the region (e.g., "1" = Riyadh).
          */
-        if ( ! preg_match('/^[0-9]{10}$/', $value)) {
-            $fail("The CR Number must be a valid Saudi CR number.");
+        if (in_array(preg_match('/^\d{10}$/', (string) $value), [0, false], true)) {
+            $fail('The CR Number must be a valid Saudi CR number.');
         }
     }
 }

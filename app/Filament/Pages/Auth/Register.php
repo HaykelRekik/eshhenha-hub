@@ -8,6 +8,7 @@ use Filament\Auth\Pages\Register as BaseRegister;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Schemas\Components\Component;
+use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Filament\Support\Enums\Width;
@@ -19,12 +20,18 @@ class Register extends BaseRegister
     public function form(Schema $schema): Schema
     {
         return $schema
+            ->columns(3)
             ->components([
                 $this->getRoleFormComponent(),
                 $this->getNameFormComponent(),
                 $this->getEmailFormComponent(),
-                $this->getPasswordFormComponent(),
-                $this->getPasswordConfirmationFormComponent(),
+
+                Grid::make()
+                    ->columns(2)
+                    ->components([
+                        $this->getPasswordFormComponent(),
+                        $this->getPasswordConfirmationFormComponent(),
+                    ]),
                 $this->getVATNumberFormComponent(),
                 $this->getCRNumberFormComponent(),
             ]);
@@ -35,10 +42,12 @@ class Register extends BaseRegister
         return ToggleButtons::make('role')
             ->label(__('Register as'))
             ->inline()
+            ->grouped()
             ->options([
-                'customer' => __('Customer'),
-                'company' => __('Company'),
-            ]);
+                'customer' => __('customer'),
+                'company' => __('company'),
+            ])
+            ->in(['customer', 'company']);
     }
 
     protected function getVATNumberFormComponent(): Component
@@ -55,7 +64,7 @@ class Register extends BaseRegister
 
     protected function getCRNumberFormComponent(): Component
     {
-        return TextInput::make('cr_number')
+        return TextInput::make('company.cr_number')
             ->label(__('CR Number'))
             ->required(fn (Get $get): bool => 'company' === $get('role'))
             ->visibleJs(
