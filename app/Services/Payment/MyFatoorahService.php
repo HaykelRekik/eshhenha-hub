@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Services\Payment;
 
+use App\DTOs\Payment\PaymentRequestDto;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Http\Client\RequestException;
 use Illuminate\Support\Facades\Http;
