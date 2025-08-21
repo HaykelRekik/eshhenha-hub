@@ -7,12 +7,14 @@ namespace App\Filament\Resources\PricingRules;
 use App\Filament\Resources\PricingRules\Pages\CreatePricingRule;
 use App\Filament\Resources\PricingRules\Pages\EditPricingRule;
 use App\Filament\Resources\PricingRules\Pages\ListPricingRules;
-use App\Filament\Resources\PricingRules\Schemas\PricingRuleForm;
+use App\Filament\Resources\PricingRules\Schemas\CreatePricingRuleForm;
+use App\Filament\Resources\PricingRules\Schemas\EditPricingRuleForm;
 use App\Filament\Resources\PricingRules\Tables\PricingRulesTable;
 use App\Models\PricingRule;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
+use Filament\Support\Enums\Operation;
 use Filament\Tables\Table;
 
 class PricingRuleResource extends Resource
@@ -25,7 +27,10 @@ class PricingRuleResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return PricingRuleForm::configure($schema);
+        return match ($schema->getOperation()) {
+            Operation::Create->value => CreatePricingRuleForm::configure($schema),
+            Operation::Edit->value => EditPricingRuleForm::configure($schema),
+        };
     }
 
     public static function table(Table $table): Table

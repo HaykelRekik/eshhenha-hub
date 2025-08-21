@@ -2,39 +2,37 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources\ShippingCompanies\Components\Form;
+namespace App\Filament\Support\Components;
 
 use App\Rules\SaudiIBAN;
 use App\Rules\SwiftCode;
 use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Components\Wizard\Step;
 
-final class BankInformationStep
+final class BankDetailsBloc
 {
-    public static function make(): Step
+    public static function make(): array
     {
-        return Step::make('bank_information')
-            ->label(__('Bank Credentials'))
-            ->icon('phosphor-bank-duotone')
-            ->columns(2)
-            ->schema([
+        return
+            [
                 TextInput::make('bank_code')
                     ->label(__('Bank Code'))
                     ->required(),
 
                 TextInput::make('bank_account_number')
                     ->label(__('Bank Account Number'))
+                    ->unique()
                     ->required(),
 
                 TextInput::make('iban')
                     ->label(__('IBAN'))
                     ->required()
+                    ->unique()
                     ->rules([new SaudiIBAN()]),
 
                 TextInput::make('swift')
                     ->label(__('Swift'))
                     ->required()
                     ->rules([new SwiftCode()]),
-            ]);
+            ];
     }
 }

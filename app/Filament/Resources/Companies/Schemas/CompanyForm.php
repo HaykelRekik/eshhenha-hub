@@ -6,6 +6,7 @@ namespace App\Filament\Resources\Companies\Schemas;
 
 use App\Enums\UserRole;
 
+use App\Filament\Support\Components\BankDetailsBloc;
 use App\Models\User;
 use App\Rules\CRNumber;
 use App\Rules\VATNumber;
@@ -13,6 +14,7 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
+use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 use Filament\Support\Enums\Operation;
@@ -79,21 +81,29 @@ class CompanyForm
                             )
                             ->required(),
 
-                        TextInput::make('cr_number')
-                            ->label(__('CR Number'))
-                            ->required()
-                            ->maxLength(10)
-                            ->rules([
-                                new CRNumber(),
+                        Grid::make()
+                            ->columns(2)
+                            ->components([
+                                TextInput::make('cr_number')
+                                    ->label(__('CR Number'))
+                                    ->required()
+                                    ->maxLength(10)
+                                    ->rules([
+                                        new CRNumber(),
+                                    ]),
+
+                                TextInput::make('vat_number')
+                                    ->label(__('VAT Number'))
+                                    ->required()
+                                    ->maxLength(15)
+                                    ->rules([
+                                        new VATNumber(),
+                                    ]),
                             ]),
 
-                        TextInput::make('vat_number')
-                            ->label(__('VAT Number'))
-                            ->required()
-                            ->maxLength(15)
-                            ->rules([
-                                new VATNumber(),
-                            ]),
+                        Grid::make()
+                            ->columns(2)
+                            ->components(BankDetailsBloc::make()),
 
                         FileUpload::make('logo')
                             ->label(__('Company Logo'))

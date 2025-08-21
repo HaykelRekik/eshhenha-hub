@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources\ShippingCompanies\Components\Infolist;
+namespace App\Filament\Resources\ShippingCompanies\Schemas\Components\Infolist;
 
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Section;

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources\ShippingCompanies\Components\Form;
+namespace App\Filament\Resources\ShippingCompanies\Schemas\Components\Form;
 
 use App\Filament\Support\Components\AddressBloc;
 use Filament\Forms\Components\FileUpload;

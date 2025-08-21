@@ -80,6 +80,8 @@ class UtilityServiceProvider extends ServiceProvider
         Tabs::configureUsing(modifyUsing: fn (Tabs $tabs): Tabs => $tabs->columnSpanFull());
 
         FileUpload::configureUsing(fn (FileUpload $fileUpload): FileUpload => $fileUpload
+            ->disk('public')
+            ->moveFiles()
             ->visibility('public'));
 
         ImageColumn::configureUsing(fn (ImageColumn $imageColumn): ImageColumn => $imageColumn

@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\ShippingCompanies\Schemas;
 
-use App\Filament\Resources\ShippingCompanies\Components\Form\BankInformationStep;
-use App\Filament\Resources\ShippingCompanies\Components\Form\CompanyDetailsStep;
-use App\Filament\Resources\ShippingCompanies\Components\Form\ShippingInsuranceSettingsStep;
+use App\Filament\Resources\ShippingCompanies\Schemas\Components\Form\BankInformationStep;
+use App\Filament\Resources\ShippingCompanies\Schemas\Components\Form\CompanyDetailsStep;
+use App\Filament\Resources\ShippingCompanies\Schemas\Components\Form\ShippingInsuranceSettingsStep;
 use Filament\Schemas\Components\Wizard;
 use Filament\Schemas\Schema;
 

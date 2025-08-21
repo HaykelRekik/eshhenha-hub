@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\PricingRules\Tables;
 
+use App\Enums\PricingRuleType;
 use Filament\Actions\ActionGroup;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
@@ -40,6 +41,10 @@ class PricingRulesTable
                     ->saudiRiyal(),
             ])
             ->filters([
+                SelectFilter::make('type')
+                    ->label(__('Pricing rule for'))
+                    ->options(PricingRuleType::class),
+
                 SelectFilter::make('Shipping Company')
                     ->label(__('Shipping Company'))
                     ->relationship('shippingCompany', 'name')

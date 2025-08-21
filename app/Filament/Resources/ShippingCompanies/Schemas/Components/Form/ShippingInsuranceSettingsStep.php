@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Filament\Resources\ShippingCompanies\Components\Form;
+namespace App\Filament\Resources\ShippingCompanies\Schemas\Components\Form;
 
 use App\Enums\ShippingCompanyInsuranceType;
 use App\Enums\ShippingRange;

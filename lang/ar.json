@@ -530,6 +530,12 @@
     "Minimum points required to make a transfer": "الحد الأدنى للنقاط المطلوبة لإجراء التحويل",
     "Loyalty Points Settings": "إعدادات نقاط الولاء",
     "Company Informations": "معلومات الشركة",
-    "Minimum Transferable Points": "الحد الأدنى للنقاط القابلة للتحويل"
-
+    "Minimum Transferable Points": "الحد الأدنى للنقاط القابلة للتحويل",
+    "global": "عامة",
+    "shipping company": "شركة الشحن",
+    "customer & shipping company": "عميل وشركة الشحن",
+    "company & shipping company": "شركة وشركة الشحن",
+    "address": "عنوان",
+    "Address Book": "دفتر العناوين",
+    "Pricing Table": "جدول الأسعار"
 }
