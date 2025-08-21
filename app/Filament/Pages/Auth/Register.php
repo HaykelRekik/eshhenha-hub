@@ -35,7 +35,7 @@ class Register extends BaseRegister
                         $this->getPasswordConfirmationFormComponent(),
                         $this->getVATNumberFormComponent(),
                         $this->getCRNumberFormComponent(),
-                        $this->getBankDetailsFormComponent()
+                        $this->getBankDetailsFormComponent(),
 
                     ]),
             ]);
@@ -58,7 +58,7 @@ class Register extends BaseRegister
     {
         return TextInput::make('vat_number')
             ->label(__('VAT Number'))
-            ->required(fn(Get $get): bool => 'company' === $get('role'))
+            ->required(fn (Get $get): bool => 'company' === $get('role'))
             ->visibleJs(
                 <<<'JS'
                     $get('role') === 'company'
@@ -70,7 +70,7 @@ class Register extends BaseRegister
     {
         return TextInput::make('company.cr_number')
             ->label(__('CR Number'))
-            ->required(fn(Get $get): bool => 'company' === $get('role'))
+            ->required(fn (Get $get): bool => 'company' === $get('role'))
             ->visibleJs(
                 <<<'JS'
                     $get('role') === 'company'
@@ -78,7 +78,7 @@ class Register extends BaseRegister
             );
     }
 
-    private function getBankDetailsFormComponent()
+    private function getBankDetailsFormComponent(): Component
     {
         return Grid::make()
             ->columns(2)
