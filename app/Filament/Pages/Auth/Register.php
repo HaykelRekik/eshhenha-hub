@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Pages\Auth;
 
+use App\Filament\Support\Components\BankDetailsBloc;
 use Filament\Auth\Pages\Register as BaseRegister;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
@@ -28,12 +29,15 @@ class Register extends BaseRegister
 
                 Grid::make()
                     ->columns(2)
+                    ->columnSpanFull()
                     ->components([
                         $this->getPasswordFormComponent(),
                         $this->getPasswordConfirmationFormComponent(),
+                        $this->getVATNumberFormComponent(),
+                        $this->getCRNumberFormComponent(),
+                        $this->getBankDetailsFormComponent()
+
                     ]),
-                $this->getVATNumberFormComponent(),
-                $this->getCRNumberFormComponent(),
             ]);
     }
 
@@ -54,7 +58,7 @@ class Register extends BaseRegister
     {
         return TextInput::make('vat_number')
             ->label(__('VAT Number'))
-            ->required(fn (Get $get): bool => 'company' === $get('role'))
+            ->required(fn(Get $get): bool => 'company' === $get('role'))
             ->visibleJs(
                 <<<'JS'
                     $get('role') === 'company'
@@ -66,11 +70,23 @@ class Register extends BaseRegister
     {
         return TextInput::make('company.cr_number')
             ->label(__('CR Number'))
-            ->required(fn (Get $get): bool => 'company' === $get('role'))
+            ->required(fn(Get $get): bool => 'company' === $get('role'))
             ->visibleJs(
                 <<<'JS'
                     $get('role') === 'company'
                 JS
             );
+    }
+
+    private function getBankDetailsFormComponent()
+    {
+        return Grid::make()
+            ->columns(2)
+            ->visibleJs(
+                <<<'JS'
+                    $get('role') === 'company'
+                JS
+            )
+            ->components(BankDetailsBloc::make());
     }
 }
