@@ -7,6 +7,7 @@ namespace App\Filament\Resources\PricingRules\Schemas\Components;
 use App\Enums\PricingRuleType;
 use App\Enums\UserRole;
 use Filament\Forms\Components\Select;
+use Filament\Schemas\Components\Utilities\Get;
 use Illuminate\Database\Eloquent\Builder;
 
 class CustomerSelect
@@ -22,14 +23,9 @@ class CustomerSelect
             ->relationship(
                 name: 'user',
                 titleAttribute: 'name',
-                modifyQueryUsing: fn (Builder $query) => $query->role(UserRole::USER)
+                modifyQueryUsing: fn(Builder $query) => $query->role(UserRole::USER)
             )
-            ->visibleJs(
-                <<<'JS'
-                $get('type') === 'customer & shipping company' ||
-                $get('type') === 'customer'
-                JS
-            )
+            ->visible(fn(Get $get): bool => in_array($get('type'), [PricingRuleType::CUSTOMER_SHIPPING_COMPANY, PricingRuleType::CUSTOMER]))
             ->searchable()
             ->preload();
     }

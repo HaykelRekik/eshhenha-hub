@@ -6,6 +6,7 @@ namespace App\Filament\Resources\PricingRules\Schemas\Components;
 
 use App\Enums\PricingRuleType;
 use Filament\Forms\Components\Select;
+use Filament\Schemas\Components\Utilities\Get;
 
 class ShippingCompanySelect
 {
@@ -19,13 +20,7 @@ class ShippingCompanySelect
                 PricingRuleType::SHIPPING_COMPANY->value,
                 PricingRuleType::CUSTOMER_SHIPPING_COMPANY->value,
             ])
-            ->visibleJs(
-                <<<'JS'
-                $get('type') === 'shipping company' ||
-                $get('type') === 'customer & shipping company' ||
-                $get('type') === 'company & shipping company'
-                JS
-            )
+            ->visible(fn(Get $get): bool => in_array($get('type'), [PricingRuleType::COMPANY_SHIPPING_COMPANY, PricingRuleType::CUSTOMER_SHIPPING_COMPANY, PricingRuleType::SHIPPING_COMPANY]))
             ->afterStateUpdatedJs(
                 <<<'JS'
                 $set('company_id', null)

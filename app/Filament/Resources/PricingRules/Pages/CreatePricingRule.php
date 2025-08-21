@@ -16,18 +16,18 @@ class CreatePricingRule extends CreateRecord
 
     protected function handleRecordCreation(array $data): Model
     {
-        $pricingTable = $data['pricing_table'];
-        unset($data['pricing_table']);
+        $data = collect($data);
 
+        $pricingTable = $data->get('pricing_table', []);
         $rows = collect($pricingTable)->map(fn ($row): array => [
-            'user_id' => $data['user_id'],
-            'company_id' => $data['company_id'],
-            'shipping_company_id' => $data['shipping_company_id'],
-            'type' => $data['type']->value,
-            'weight_from' => $row['weight_from'],
-            'weight_to' => $row['weight_to'],
-            'local_price_per_kg' => $row['local_price_per_kg'],
-            'international_price_per_kg' => $row['international_price_per_kg'],
+            'user_id' => $data->get('user_id'),
+            'company_id' => $data->get('company_id'),
+            'shipping_company_id' => $data->get('shipping_company_id'),
+            'type' => optional($data->get('type'))->value,
+            'weight_from' => $row['weight_from'] ?? null,
+            'weight_to' => $row['weight_to'] ?? null,
+            'local_price_per_kg' => $row['local_price_per_kg'] ?? null,
+            'international_price_per_kg' => $row['international_price_per_kg'] ?? null,
             'created_at' => now(),
             'updated_at' => now(),
         ])->toArray();

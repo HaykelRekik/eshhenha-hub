@@ -17,7 +17,8 @@ class PricingRuleTypeSelect
             ->options(PricingRuleType::class)
             ->required()
             ->hiddenOn(Operation::Edit)
-            ->partiallyRenderComponentsAfterStateUpdated(['company_id', 'user_id', 'shipping_company_id'])
+            ->partiallyRenderAfterStateUpdated(true) // enables partial rerendering
+            ->live()
             ->afterStateUpdatedJs(
                 <<<'JS'
                 $set('shipping_company_id' , null);

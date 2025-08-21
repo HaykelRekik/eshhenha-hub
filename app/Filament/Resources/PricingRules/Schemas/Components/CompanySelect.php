@@ -10,6 +10,7 @@ use Filament\Forms\Components\Select;
 use Filament\Schemas\Components\Utilities\Get;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 
 class CompanySelect
 {
@@ -17,28 +18,19 @@ class CompanySelect
     {
         return Select::make('company_id')
             ->label(__('Company'))
-            ->relationship(
-                name: 'company',
-                titleAttribute: 'name',
-                modifyQueryUsing: fn (Builder $query, Get $get) => $query->whereRelation('contracts', 'shipping_company_id', $get('shipping_company_id'))
-            )
-            ->options(fn (Get $get): array|Collection => match ($get('type')) {
-                PricingRuleType::COMPANY->value => Company::whereIsActive(true)->pluck('name', 'id'),
-                PricingRuleType::COMPANY_SHIPPING_COMPANY->value => Company::whereIsActive(true)
+            ->options(function (Get $get) {
+                if ($get('type') == PricingRuleType::COMPANY) {
+                    return Company::whereIsActive(true)->pluck('name', 'id');
+                }
+                return Company::whereIsActive(true)
                     ->whereRelation('contracts', 'shipping_company_id', $get('shipping_company_id'))
-                    ->pluck('name', 'id'),
-                default => [],
+                    ->pluck('name', 'id');
             })
             ->requiredIf('type', [
                 PricingRuleType::COMPANY_SHIPPING_COMPANY->value,
                 PricingRuleType::COMPANY->value,
             ])
-            ->visibleJs(
-                <<<'JS'
-                $get('type') === 'company & shipping company' ||
-                $get('type') === 'company'
-                JS
-            )
+            ->visible(fn(Get $get): bool => in_array($get('type'), [PricingRuleType::COMPANY_SHIPPING_COMPANY, PricingRuleType::COMPANY]))
             ->searchable()
             ->preload();
     }

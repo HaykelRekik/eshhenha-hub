@@ -11,6 +11,7 @@ use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Utilities\Get;
+use Filament\Schemas\Components\Utilities\Set;
 use Illuminate\Support\Collection;
 
 final class AddressBloc
@@ -50,12 +51,10 @@ final class AddressBloc
                         ->preload()
                         ->live(onBlur: true)
                         ->partiallyRenderComponentsAfterStateUpdated(['region_id', 'city_id'])
-                        ->afterStateUpdatedJs(
-                            <<<'JS'
-                        $set('region_id',null);
-                        $set('city_id',null);
-                    JS
-                        ),
+                        ->afterStateUpdated(function (Set $set): void {
+                            $set(key: 'region_id', state: null);
+                            $set(key: 'city_id', state: null);
+                        }),
 
                     Select::make('region_id')
                         ->label(__('Region'))
@@ -81,11 +80,9 @@ final class AddressBloc
                         })
                         ->live(onBlur: true)
                         ->partiallyRenderComponentsAfterStateUpdated(['city_id'])
-                        ->afterStateUpdatedJs(
-                            <<<'JS'
-                                $set('city_id',null);
-                            JS
-                        ),
+                        ->afterStateUpdated(function (Set $set): void {
+                            $set(key: 'city_id', state: null);
+                        }),
 
                     Select::make('city_id')
                         ->label(__('City'))
