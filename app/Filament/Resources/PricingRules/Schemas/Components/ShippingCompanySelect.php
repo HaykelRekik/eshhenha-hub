@@ -20,7 +20,7 @@ class ShippingCompanySelect
                 PricingRuleType::SHIPPING_COMPANY->value,
                 PricingRuleType::CUSTOMER_SHIPPING_COMPANY->value,
             ])
-            ->visible(fn(Get $get): bool => in_array($get('type'), [PricingRuleType::COMPANY_SHIPPING_COMPANY, PricingRuleType::CUSTOMER_SHIPPING_COMPANY, PricingRuleType::SHIPPING_COMPANY]))
+            ->visible(fn (Get $get): bool => in_array($get('type'), [PricingRuleType::COMPANY_SHIPPING_COMPANY, PricingRuleType::CUSTOMER_SHIPPING_COMPANY, PricingRuleType::SHIPPING_COMPANY]))
             ->afterStateUpdatedJs(
                 <<<'JS'
                 $set('company_id', null)

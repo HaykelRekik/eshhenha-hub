@@ -23,9 +23,9 @@ class CustomerSelect
             ->relationship(
                 name: 'user',
                 titleAttribute: 'name',
-                modifyQueryUsing: fn(Builder $query) => $query->role(UserRole::USER)
+                modifyQueryUsing: fn (Builder $query) => $query->role(UserRole::USER)
             )
-            ->visible(fn(Get $get): bool => in_array($get('type'), [PricingRuleType::CUSTOMER_SHIPPING_COMPANY, PricingRuleType::CUSTOMER]))
+            ->visible(fn (Get $get): bool => in_array($get('type'), [PricingRuleType::CUSTOMER_SHIPPING_COMPANY, PricingRuleType::CUSTOMER]))
             ->searchable()
             ->preload();
     }
