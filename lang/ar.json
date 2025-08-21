@@ -537,5 +537,9 @@
     "company & shipping company": "شركة وشركة الشحن",
     "address": "عنوان",
     "Address Book": "دفتر العناوين",
-    "Pricing Table": "جدول الأسعار"
+    "Pricing Table": "جدول الأسعار",
+    "Validation Error": "خطأ في التحقق",
+    "Interval :number: Weight From (:from kg) must be less than Weight To (:to kg)": "الفاصل :number: الوزن من (:from كجم) يجب أن يكون أقل من الوزن إلى (:to كجم)",
+    "Interval :current overlaps with interval :next. Range :currentRange conflicts with :nextRange": "الفاصل :current يتداخل مع الفاصل :next. النطاق :currentRange يتعارض مع :nextRange",
+    "Rule Type": "نوع القاعدة"
 }

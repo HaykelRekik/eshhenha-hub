@@ -6,6 +6,7 @@ namespace App\Filament\Resources\PricingRules\Pages;
 
 use App\Filament\Resources\PricingRules\PricingRuleResource;
 use App\Models\PricingRule;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\CreateRecord;
 use Illuminate\Database\Eloquent\Model;
 
@@ -36,5 +37,44 @@ class CreatePricingRule extends CreateRecord
         $model = static::getModel();
 
         return new $model();
+    }
+
+    protected function mutateFormDataBeforeCreate(array $data): array
+    {
+        $intervals = collect($data['pricing_table'] ?? [])->sortBy('weight_from')->values();
+
+        foreach ($intervals as $i => $interval) {
+            if ($interval['weight_from'] >= $interval['weight_to']) {
+                Notification::make()
+                    ->title(__('Validation Error'))
+                    ->body(__('Interval :number: Weight From (:from kg) must be less than Weight To (:to kg)', [
+                        'number' => $i + 1,
+                        'from' => $interval['weight_from'],
+                        'to' => $interval['weight_to'],
+                    ]))
+                    ->danger()
+                    ->send();
+
+                $this->halt(true);
+            }
+
+            $nextInterval = $intervals->get($i + 1);
+            if ($nextInterval && $interval['weight_to'] > $nextInterval['weight_from']) {
+                Notification::make()
+                    ->title(__('Validation Error'))
+                    ->body(__('Interval :current overlaps with interval :next. Range :currentRange conflicts with :nextRange', [
+                        'current' => $i + 1,
+                        'next' => $i + 2,
+                        'currentRange' => $interval['weight_from'] . '-' . $interval['weight_to'] . ' kg',
+                        'nextRange' => $nextInterval['weight_from'] . '-' . $nextInterval['weight_to'] . ' kg',
+                    ]))
+                    ->danger()
+                    ->send();
+
+                $this->halt(true);
+            }
+        }
+
+        return $data;
     }
 }

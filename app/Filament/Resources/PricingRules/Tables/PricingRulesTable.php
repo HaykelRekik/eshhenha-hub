@@ -6,12 +6,10 @@ namespace App\Filament\Resources\PricingRules\Tables;
 
 use App\Enums\PricingRuleType;
 use Filament\Actions\ActionGroup;
-use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteAction;
-use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
-use Filament\Pages\Page;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Contracts\HasTable;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
 
@@ -21,11 +19,21 @@ class PricingRulesTable
     {
         return $table
             ->columns([
+                TextColumn::make('type')
+                    ->label(__('Rule Type'))
+                    ->badge(),
+
                 TextColumn::make('company.name')
                     ->label(__('Company'))
-                    ->hidden(fn (Page $livewire): bool => 'customers' === $livewire->activeTab),
+                    ->visible(fn (HasTable $livewire): bool => 'company' === ($livewire->getTableFilterState('type')['value'] ?? null)),
                 TextColumn::make('shippingCompany.name')
-                    ->label(__('Shipping Company')),
+                    ->label(__('Shipping Company'))
+                    ->visible(fn (HasTable $livewire): bool => 'shipping company' === ($livewire?->getTableFilterState('type')['value'] ?? null)),
+
+                TextColumn::make('user.name')
+                    ->label(__('Customer'))
+                    ->visible(fn (HasTable $livewire): bool => 'customer' === ($livewire?->getTableFilterState('type')['value'] ?? null)),
+
                 TextColumn::make('weight_from')
                     ->label(__('Weight From'))
                     ->suffix(' ' . __('KG'))
@@ -58,9 +66,7 @@ class PricingRulesTable
                 ]),
             ])
             ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
+
             ]);
     }
 }

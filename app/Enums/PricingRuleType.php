@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace App\Enums;
 
+use Filament\Support\Colors\Color;
+use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasLabel;
 use Illuminate\Contracts\Support\Htmlable;
 
-enum PricingRuleType: string implements HasLabel
+enum PricingRuleType: string implements HasColor, HasLabel
 {
     case GLOBAL = 'global';
     case CUSTOMER = 'customer';
@@ -43,5 +45,17 @@ enum PricingRuleType: string implements HasLabel
     public function getLabel(): string|Htmlable|null
     {
         return __($this->value);
+    }
+
+    public function getColor(): string|array|null
+    {
+        return match ($this) {
+            self::GLOBAL => Color::Stone,
+            self::CUSTOMER => Color::Lime,
+            self::COMPANY => Color::Yellow,
+            self::SHIPPING_COMPANY => Color::Red,
+            self::CUSTOMER_SHIPPING_COMPANY => Color::Purple,
+            self::COMPANY_SHIPPING_COMPANY => Color::Blue,
+        };
     }
 }
