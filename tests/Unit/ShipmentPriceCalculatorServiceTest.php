@@ -5,6 +5,9 @@ declare(strict_types=1);
 use App\DTOs\Shipment\PriceBreakdown;
 use App\DTOs\Shipment\ShipmentPriceCalculationRequest;
 use App\DTOs\Shipment\ShippingCompanyPriceBreakdown;
+use App\Services\Shipment\Pipeline\Steps\CalculatePriceBreakdownsStep;
+use App\Services\Shipment\Pipeline\Steps\FindAvailableShippingCompaniesStep;
+use App\Services\Shipment\Pipeline\Steps\FindPricingRulesStep;
 use App\Services\Shipment\PriceBreakdownCalculatorService;
 use App\Services\Shipment\PricingRuleFinderService;
 use App\Services\Shipment\ShipmentPriceCalculatorService;
@@ -16,12 +19,14 @@ it('can be instantiated with make method', function (): void {
 });
 
 it('can be instantiated with constructor injection', function (): void {
-    $pricingRuleFinder = new PricingRuleFinderService();
-    $priceBreakdownCalculator = new PriceBreakdownCalculatorService();
+    $findCompaniesStep = new FindAvailableShippingCompaniesStep();
+    $findPricingRulesStep = new FindPricingRulesStep(new PricingRuleFinderService());
+    $calculateBreakdownsStep = new CalculatePriceBreakdownsStep(new PriceBreakdownCalculatorService());
 
     $service = new ShipmentPriceCalculatorService(
-        pricingRuleFinder: $pricingRuleFinder,
-        priceBreakdownCalculator: $priceBreakdownCalculator,
+        findCompaniesStep: $findCompaniesStep,
+        findPricingRulesStep: $findPricingRulesStep,
+        calculateBreakdownsStep: $calculateBreakdownsStep,
     );
 
     expect($service)->toBeInstanceOf(ShipmentPriceCalculatorService::class);
@@ -77,6 +82,16 @@ it('creates correct shipping company price breakdown DTO', function (): void {
 
     expect($shippingCompanyBreakdown->name)->toBe('Test Company');
     expect($shippingCompanyBreakdown->breakdown)->toBe($breakdown);
+});
+
+it('pipeline steps can be instantiated', function (): void {
+    $findCompaniesStep = new FindAvailableShippingCompaniesStep();
+    $findPricingRulesStep = new FindPricingRulesStep(new PricingRuleFinderService());
+    $calculateBreakdownsStep = new CalculatePriceBreakdownsStep(new PriceBreakdownCalculatorService());
+
+    expect($findCompaniesStep)->toBeInstanceOf(FindAvailableShippingCompaniesStep::class);
+    expect($findPricingRulesStep)->toBeInstanceOf(FindPricingRulesStep::class);
+    expect($calculateBreakdownsStep)->toBeInstanceOf(CalculatePriceBreakdownsStep::class);
 });
 
 it('pricing rule finder can be instantiated', function (): void {

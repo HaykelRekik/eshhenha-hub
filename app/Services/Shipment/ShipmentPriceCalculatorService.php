@@ -5,77 +5,64 @@ declare(strict_types=1);
 namespace App\Services\Shipment;
 
 use App\DTOs\Shipment\ShipmentPriceCalculationRequest;
-use App\DTOs\Shipment\ShippingCompanyPriceBreakdown;
-use App\Models\ShippingCompany;
-use Illuminate\Support\Collection;
+use App\Services\Shipment\Pipeline\ShipmentPriceCalculationContext;
+use App\Services\Shipment\Pipeline\Steps\CalculatePriceBreakdownsStep;
+use App\Services\Shipment\Pipeline\Steps\FindAvailableShippingCompaniesStep;
+use App\Services\Shipment\Pipeline\Steps\FindPricingRulesStep;
+use Illuminate\Pipeline\Pipeline;
 
-readonly class ShipmentPriceCalculatorService
+/**
+ * Service for calculating shipment prices using Laravel's Pipeline pattern
+ */
+final readonly class ShipmentPriceCalculatorService
 {
+    /**
+     * @param  FindAvailableShippingCompaniesStep  $findCompaniesStep  Step to find available shipping companies
+     * @param  FindPricingRulesStep  $findPricingRulesStep  Step to find applicable pricing rules
+     * @param  CalculatePriceBreakdownsStep  $calculateBreakdownsStep  Step to calculate price breakdowns
+     */
     public function __construct(
-        private PricingRuleFinderService $pricingRuleFinder,
-        private PriceBreakdownCalculatorService $priceBreakdownCalculator,
+        private FindAvailableShippingCompaniesStep $findCompaniesStep,
+        private FindPricingRulesStep $findPricingRulesStep,
+        private CalculatePriceBreakdownsStep $calculateBreakdownsStep
     ) {}
 
+    /**
+     * Create a new instance of the service with default dependencies
+     */
     public static function make(): self
     {
         return new self(
-            pricingRuleFinder: new PricingRuleFinderService(),
-            priceBreakdownCalculator: new PriceBreakdownCalculatorService(),
+            findCompaniesStep: new FindAvailableShippingCompaniesStep(),
+            findPricingRulesStep: new FindPricingRulesStep(
+                new PricingRuleFinderService()
+            ),
+            calculateBreakdownsStep: new CalculatePriceBreakdownsStep(
+                new PriceBreakdownCalculatorService()
+            )
         );
     }
 
+    /**
+     * Calculate shipment prices for all available shipping companies
+     *
+     * @param  ShipmentPriceCalculationRequest  $request  The calculation request
+     * @return array<int, \App\DTOs\Shipment\ShippingCompanyPriceBreakdown> Array of price breakdowns indexed by shipping company ID
+     */
     public function calculatePrices(ShipmentPriceCalculationRequest $request): array
     {
-        // Get shipping companies that can deliver to the recipient region
-        $availableShippingCompanies = $this->getAvailableShippingCompanies($request->recipientRegionId);
+        $pipeline = app(Pipeline::class);
 
-        if ($availableShippingCompanies->isEmpty()) {
-            return [];
-        }
+        $context = ShipmentPriceCalculationContext::fromRequest($request);
 
-        // Get all applicable pricing rules for all shipping companies in a single query
-        $pricingRules = $this->pricingRuleFinder->findApplicableRulesForCompanies(
-            shippingCompanyIds: $availableShippingCompanies->pluck('id'),
-            userId: $request->userId,
-            companyId: $request->companyId,
-            weight: $request->weight
-        );
+        $resultContext = $pipeline->send($context)
+            ->through([
+                $this->findCompaniesStep,
+                $this->findPricingRulesStep,
+                $this->calculateBreakdownsStep,
+            ])
+            ->thenReturn();
 
-        // Create a lookup map for quick access to pricing rules by shipping company ID
-        $pricingRulesMap = $pricingRules->keyBy('shipping_company_id');
-
-        $results = [];
-
-        foreach ($availableShippingCompanies as $shippingCompany) {
-            $pricingRule = $pricingRulesMap->get($shippingCompany->id);
-
-            if ( ! $pricingRule) {
-                continue;
-            }
-
-            $priceBreakdown = $this->priceBreakdownCalculator->calculate(
-                pricingRule: $pricingRule,
-                shippingCompany: $shippingCompany,
-                weight: $request->weight,
-                homePickup: $request->homePickup,
-                shipmentValue: $request->shipmentValue
-            );
-
-            $results[$shippingCompany->id] = new ShippingCompanyPriceBreakdown(
-                name: $shippingCompany->name,
-                breakdown: $priceBreakdown
-            );
-        }
-
-        return $results;
-    }
-
-    private function getAvailableShippingCompanies(int $regionId): Collection
-    {
-        return ShippingCompany::query()
-            ->OperatesInRegion($regionId)
-            ->where('is_active', true)
-            ->get()
-            ->collect();
+        return $resultContext->getResults();
     }
 }
