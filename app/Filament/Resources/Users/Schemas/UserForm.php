@@ -92,7 +92,7 @@ class UserForm
                                                 'contact_phone_number' => $get('phone_number'),
                                                 'is_default' => true,
                                             ])
-                                            ->components(AddressBloc::make()),
+                                            ->components([AddressBloc::make()]),
                                     ]),
 
                                 Fieldset::make()

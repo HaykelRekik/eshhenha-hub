@@ -29,7 +29,7 @@ class AddressForm
                             ->required(),
 
                         Grid::make()
-                            ->components(AddressBloc::make()),
+                            ->components([AddressBloc::make()]),
 
                         TextInput::make('addressable_type')
                             ->required(),

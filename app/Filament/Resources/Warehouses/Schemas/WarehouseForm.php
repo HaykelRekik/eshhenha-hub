@@ -48,7 +48,7 @@ class WarehouseForm
                             ]),
                         Grid::make(3)
                             ->relationship('address')
-                            ->components(AddressBloc::make()),
+                            ->components([AddressBloc::make()]),
                     ]),
             ]);
     }
