@@ -46,8 +46,15 @@ readonly class PricingRuleFinderService
 
                 if ($remainingCompanyIds->isNotEmpty()) {
                     // 4. Fallback to global rules
-                    $globalRules = $this->findGlobalRules($remainingCompanyIds, $weight);
-                    $rules = $rules->merge($globalRules);
+                    $globalRules = $this->findGlobalRules($weight);
+                    // Apply global rules to all remaining shipping companies
+                    foreach ($globalRules as $globalRule) {
+                        foreach ($remainingCompanyIds as $companyId) {
+                            $clonedRule = clone $globalRule;
+                            $clonedRule->shipping_company_id = $companyId;
+                            $rules->push($clonedRule);
+                        }
+                    }
                 }
             }
         }
@@ -83,9 +90,9 @@ readonly class PricingRuleFinderService
             ->whereIn('shipping_company_id', $shippingCompanyIds)
             ->forWeight($weight);
 
-        if ($userId !== null && $userId !== 0) {
+        if (null !== $userId && 0 !== $userId) {
             $query->forCustomers($userId);
-        } elseif ($companyId !== null && $companyId !== 0) {
+        } elseif (null !== $companyId && 0 !== $companyId) {
             $query->forCompany($companyId);
         }
 
@@ -98,14 +105,12 @@ readonly class PricingRuleFinderService
     private function findUserCompanyRules(Collection $shippingCompanyIds, ?int $userId, ?int $companyId, float $weight): Collection
     {
         $query = PricingRule::query()
-            ->whereIn('shipping_company_id', $shippingCompanyIds)
             ->forWeight($weight)
-            ->whereNull('user_id')
-            ->whereNull('company_id');
+            ->whereNull('shipping_company_id');
 
-        if ($userId !== null && $userId !== 0) {
+        if (null !== $userId && 0 !== $userId) {
             $query->forCustomers($userId);
-        } elseif ($companyId !== null && $companyId !== 0) {
+        } elseif (null !== $companyId && 0 !== $companyId) {
             $query->forCompany($companyId);
         }
 
@@ -129,10 +134,9 @@ readonly class PricingRuleFinderService
     /**
      * Find global rules where all IDs are null
      */
-    private function findGlobalRules(Collection $shippingCompanyIds, float $weight): Collection
+    private function findGlobalRules(float $weight): Collection
     {
         return PricingRule::query()
-            ->whereIn('shipping_company_id', $shippingCompanyIds)
             ->forWeight($weight)
             ->whereNull('user_id')
             ->whereNull('company_id')

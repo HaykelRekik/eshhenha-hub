@@ -8,13 +8,16 @@ use App\Enums\PricingRuleType;
 use App\Policies\PricingRulePolicy;
 use Illuminate\Database\Eloquent\Attributes\Scope;
 use Illuminate\Database\Eloquent\Attributes\UsePolicy;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Query\Builder;
 
 #[UsePolicy(PricingRulePolicy::class)]
 class PricingRule extends Model
 {
+    use HasFactory;
+
     protected $fillable = [
         'user_id',
         'company_id',
