@@ -12,7 +12,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\PricingRule>
+ * @extends Factory<PricingRule>
  */
 class PricingRuleFactory extends Factory
 {
@@ -31,11 +31,11 @@ class PricingRuleFactory extends Factory
     public function definition(): array
     {
         return [
-            'weight_from' => $this->faker->randomFloat(2, 0.1, 5.0),
-            'weight_to' => $this->faker->randomFloat(2, 5.1, 20.0),
-            'local_price_per_kg' => $this->faker->randomFloat(2, 5.0, 50.0),
-            'international_price_per_kg' => $this->faker->randomFloat(2, 10.0, 100.0),
-            'type' => $this->faker->randomElement(PricingRuleType::cases()),
+            'weight_from' => fake()->randomFloat(2, 0.1, 5.0),
+            'weight_to' => fake()->randomFloat(2, 5.1, 20.0),
+            'local_price_per_kg' => fake()->randomFloat(2, 5.0, 50.0),
+            'international_price_per_kg' => fake()->randomFloat(2, 10.0, 100.0),
+            'type' => fake()->randomElement(PricingRuleType::cases()),
         ];
     }
 
@@ -44,7 +44,7 @@ class PricingRuleFactory extends Factory
      */
     public function forUser(User $user): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn (array $attributes): array => [
             'user_id' => $user->id,
         ]);
     }
@@ -54,7 +54,7 @@ class PricingRuleFactory extends Factory
      */
     public function forCompany(Company $company): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn (array $attributes): array => [
             'company_id' => $company->id,
         ]);
     }
@@ -64,7 +64,7 @@ class PricingRuleFactory extends Factory
      */
     public function forShippingCompany(ShippingCompany $shippingCompany): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn (array $attributes): array => [
             'shipping_company_id' => $shippingCompany->id,
         ]);
     }
@@ -74,7 +74,7 @@ class PricingRuleFactory extends Factory
      */
     public function global(): static
     {
-        return $this->state(fn (array $attributes) => [
+        return $this->state(fn (array $attributes): array => [
             'user_id' => null,
             'company_id' => null,
             'shipping_company_id' => null,

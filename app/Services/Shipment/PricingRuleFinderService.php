@@ -30,7 +30,7 @@ readonly class PricingRuleFinderService
 
         if ($remainingCompanyIds->isNotEmpty()) {
             // 2. Try to find user/company specific rules (without shipping company)
-            $userCompanyRules = $this->findUserCompanyRules($remainingCompanyIds, $userId, $companyId, $weight);
+            $userCompanyRules = $this->findUserCompanyRules($userId, $companyId, $weight);
             $rules = $rules->merge($userCompanyRules);
 
             // Get remaining shipping companies that don't have user/company specific rules
@@ -102,7 +102,7 @@ readonly class PricingRuleFinderService
     /**
      * Find user/company specific rules (without shipping company)
      */
-    private function findUserCompanyRules(Collection $shippingCompanyIds, ?int $userId, ?int $companyId, float $weight): Collection
+    private function findUserCompanyRules(?int $userId, ?int $companyId, float $weight): Collection
     {
         $query = PricingRule::query()
             ->forWeight($weight)

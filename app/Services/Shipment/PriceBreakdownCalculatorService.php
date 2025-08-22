@@ -38,11 +38,9 @@ readonly class PriceBreakdownCalculatorService
         );
     }
 
-    private function calculateBasePrice(PricingRule $pricingRule, float $weight): float
+    private function calculateBasePrice(PricingRule $pricingRule, float $weight, bool $isInternational = false): float
     {
-        // For now, assuming local pricing. In the future, this could be enhanced
-        // to determine local vs international based on recipient location
-        return $pricingRule->local_price_per_kg * $weight;
+        return ($isInternational ? $pricingRule->international_price_per_kg : $pricingRule->local_price_per_kg) * $weight;
     }
 
     private function calculateHomePickupCost(ShippingCompany $shippingCompany, bool $homePickup): float
