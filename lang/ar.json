@@ -316,6 +316,7 @@
     "Operational Areas": "المناطق التشغيلية",
     "Shipping": "الشحن",
     "Insurance": "التأمين",
+    "Insurance and Taxes": "التأمين والضرائب",
     "SAR": "ريال سعودي",
     "Response": "الرد",
     "Name": "الاسم",
@@ -541,5 +542,7 @@
     "Validation Error": "خطأ في التحقق",
     "Interval :number: Weight From (:from kg) must be less than Weight To (:to kg)": "الفاصل :number: الوزن من (:from كجم) يجب أن يكون أقل من الوزن إلى (:to كجم)",
     "Interval :current overlaps with interval :next. Range :currentRange conflicts with :nextRange": "الفاصل :current يتداخل مع الفاصل :next. النطاق :currentRange يتعارض مع :nextRange",
-    "Rule Type": "نوع القاعدة"
+    "Rule Type": "نوع القاعدة",
+    "Local Tax Rate": "الضريبة على الشحن المحلي ",
+    "International Tax Rate": "الضريبة على الشحن الدولي"
 }

@@ -54,7 +54,9 @@ final class CompanyDetailsStep
                         'contact_phone_number' => $get('phone_number'),
                         'is_default' => true,
                     ])
-                    ->components(AddressBloc::make()),
+                    ->components([
+                        AddressBloc::make(),
+                    ]),
 
                 FileUpload::make('logo')
                     ->label(__('Company Logo'))

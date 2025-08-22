@@ -32,6 +32,8 @@ class ShippingCompany extends Model
         'is_active',
         'insurance_type',
         'insurance_value',
+        'local_tax_rate',
+        'international_tax_rate',
         'bank_code',
         'bank_account_number',
         'iban',

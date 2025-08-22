@@ -26,6 +26,10 @@ return new class() extends Migration
                 ->default(ShippingCompanyInsuranceType::AMOUNT->value);
             $table->decimal('insurance_value')
                 ->default(0);
+            $table->decimal('local_tax_rate')
+                ->default(15);
+            $table->decimal('international_tax_rate')
+                ->default(0);
             $table->string('bank_code');
             $table->string('bank_account_number');
             $table->string('iban');

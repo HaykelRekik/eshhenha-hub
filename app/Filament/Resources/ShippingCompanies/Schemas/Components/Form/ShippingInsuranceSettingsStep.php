@@ -80,7 +80,8 @@ final class ShippingInsuranceSettingsStep
                     ]),
 
                 Fieldset::make()
-                    ->label(__('Insurance'))
+                    ->label(__('Insurance and Taxes'))
+                    ->columns(4)
                     ->schema([
                         ToggleButtons::make('insurance_type')
                             ->label(__('Insurance Type'))
@@ -106,6 +107,7 @@ final class ShippingInsuranceSettingsStep
                             ->required()
                             ->saudiRiyal()
                             ->maxLength(null)
+                            ->maxValue(null)
                             ->numeric()
                             ->visibleJs(
                                 <<<'JS'
@@ -128,9 +130,24 @@ final class ShippingInsuranceSettingsStep
                             )
                             ->minValue(1),
 
-                    /**
-                     * End Workaround to dynamically display the suffix symbol based on insurance type
-                     */
+                        /**
+                         * End Workaround to dynamically display the suffix symbol based on insurance type
+                         */
+                        TextInput::make('local_tax_rate')
+                            ->label(__('Local Tax Rate'))
+                            ->required()
+                            ->default('15')
+                            ->numeric()
+                            ->suffix('%')
+                            ->maxValue(1),
+
+                        TextInput::make('international_tax_rate')
+                            ->label(__('International Tax Rate'))
+                            ->required()
+                            ->numeric()
+                            ->suffix('%')
+                            ->default('0.00')
+                            ->maxValue(1),
                     ]),
             ]);
     }
