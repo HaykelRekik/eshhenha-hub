@@ -78,3 +78,16 @@ it('creates correct shipping company price breakdown DTO', function (): void {
     expect($shippingCompanyBreakdown->name)->toBe('Test Company');
     expect($shippingCompanyBreakdown->breakdown)->toBe($breakdown);
 });
+
+it('pricing rule finder can be instantiated', function (): void {
+    $finder = new PricingRuleFinderService();
+
+    expect($finder)->toBeInstanceOf(PricingRuleFinderService::class);
+});
+
+it('pricing rule finder has the expected methods', function (): void {
+    $finder = new PricingRuleFinderService();
+
+    expect(method_exists($finder, 'findApplicableRulesForCompanies'))->toBeTrue();
+    expect(method_exists($finder, 'findApplicableRule'))->toBeTrue();
+});

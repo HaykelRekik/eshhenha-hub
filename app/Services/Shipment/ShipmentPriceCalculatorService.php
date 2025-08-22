@@ -33,15 +33,21 @@ readonly class ShipmentPriceCalculatorService
             return [];
         }
 
+        // Get all applicable pricing rules for all shipping companies in a single query
+        $pricingRules = $this->pricingRuleFinder->findApplicableRulesForCompanies(
+            shippingCompanyIds: $availableShippingCompanies->pluck('id'),
+            userId: $request->userId,
+            companyId: $request->companyId,
+            weight: $request->weight
+        );
+
+        // Create a lookup map for quick access to pricing rules by shipping company ID
+        $pricingRulesMap = $pricingRules->keyBy('shipping_company_id');
+
         $results = [];
 
         foreach ($availableShippingCompanies as $shippingCompany) {
-            $pricingRule = $this->pricingRuleFinder->findApplicableRule(
-                shippingCompanyId: $shippingCompany->id,
-                userId: $request->userId,
-                companyId: $request->companyId,
-                weight: $request->weight
-            );
+            $pricingRule = $pricingRulesMap->get($shippingCompany->id);
 
             if ( ! $pricingRule) {
                 continue;

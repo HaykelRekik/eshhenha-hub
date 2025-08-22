@@ -7,8 +7,15 @@ This service calculates shipping prices for multiple shipping companies based on
 The `ShipmentPriceCalculatorService` follows the Single Responsibility Principle and is composed of three main services:
 
 1. **ShipmentPriceCalculatorService** - Main orchestrator service
-2. **PricingRuleFinderService** - Finds applicable pricing rules based on priority
+2. **PricingRuleFinderService** - Finds applicable pricing rules based on priority using optimized batch queries
 3. **PriceBreakdownCalculatorService** - Calculates detailed price breakdowns
+
+## Performance Optimization
+
+The service is optimized to avoid N+1 query problems by:
+- Using a single query with `whereIn` to fetch all applicable pricing rules for multiple shipping companies
+- Implementing a priority-based fallback system that efficiently handles rule discovery
+- Creating a lookup map for fast access to pricing rules by shipping company ID
 
 ## Usage
 
@@ -56,7 +63,7 @@ The service returns an array with shipping company IDs as keys:
 
 ## Pricing Rule Priority
 
-The service searches for pricing rules in the following order:
+The service searches for pricing rules in the following order using optimized batch queries:
 
 1. **Specific Rule**: Combination of shipping company + user/company + weight range
 2. **User/Company Specific**: Rules for user_id OR company_id only + weight range
@@ -72,7 +79,7 @@ The service searches for pricing rules in the following order:
 
 ## Dependencies
 
-- `PricingRuleFinderService` - Handles pricing rule discovery
+- `PricingRuleFinderService` - Handles pricing rule discovery with batch queries
 - `PriceBreakdownCalculatorService` - Handles price calculations
 - `ShipmentPriceCalculationRequest` - Request DTO
 - `ShippingCompanyPriceBreakdown` - Response DTO
@@ -83,3 +90,9 @@ The service searches for pricing rules in the following order:
 - Returns empty array if no shipping companies available for the region
 - Returns empty array if no applicable pricing rules found
 - Only returns shipping companies with valid pricing rules
+
+## Performance Benefits
+
+- **Before**: N+1 queries (1 query for shipping companies + N queries for pricing rules)
+- **After**: 2 queries total (1 for shipping companies + 1 batch query for all pricing rules)
+- **Scalability**: Performance remains consistent regardless of the number of shipping companies
