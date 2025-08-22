@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-use App\Services\Shipment\DTOs\PriceBreakdown;
-use App\Services\Shipment\DTOs\ShipmentPriceCalculationRequest;
-use App\Services\Shipment\DTOs\ShippingCompanyPriceBreakdown;
+use App\DTOs\Shipment\PriceBreakdown;
+use App\DTOs\Shipment\ShipmentPriceCalculationRequest;
+use App\DTOs\Shipment\ShippingCompanyPriceBreakdown;
 use App\Services\Shipment\PriceBreakdownCalculatorService;
 use App\Services\Shipment\PricingRuleFinderService;
 use App\Services\Shipment\ShipmentPriceCalculatorService;

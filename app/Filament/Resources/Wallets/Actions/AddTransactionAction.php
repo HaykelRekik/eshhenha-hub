@@ -7,7 +7,7 @@ namespace App\Filament\Resources\Wallets\Actions;
 use App\Enums\WalletTransactionType;
 use App\Models\Wallet;
 use App\Models\WalletTransaction;
-use App\Services\Wallets\WalletTransactionService;
+use App\Services\Wallet\WalletTransactionService;
 use Exception;
 use Filament\Actions\Action;
 use Filament\Forms\Components\Select;

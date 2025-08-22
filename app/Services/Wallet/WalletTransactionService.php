@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Services\Wallets;
+namespace App\Services\Wallet;
 
 use App\Enums\WalletTransactionType;
 use App\Models\Wallet;

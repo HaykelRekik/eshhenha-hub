@@ -4,16 +4,14 @@ declare(strict_types=1);
 
 namespace App\Services\Shipment;
 
+use App\DTOs\Shipment\PriceBreakdown;
 use App\Enums\ShippingCompanyInsuranceType;
 use App\Models\PricingRule;
 use App\Models\ShippingCompany;
-use App\Services\Shipment\DTOs\PriceBreakdown;
 
 readonly class PriceBreakdownCalculatorService
 {
     private const LOCAL_TAX_RATE = 0.15;
-
-    private const INTERNATIONAL_TAX_RATE = 0.00;
 
     public function calculate(
         PricingRule $pricingRule,

@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Services\Shipment\DTOs;
+namespace App\DTOs\Shipment;
 
 final readonly class ShipmentPriceCalculationRequest
 {

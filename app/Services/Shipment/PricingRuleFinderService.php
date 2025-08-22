@@ -83,9 +83,9 @@ readonly class PricingRuleFinderService
             ->whereIn('shipping_company_id', $shippingCompanyIds)
             ->forWeight($weight);
 
-        if ($userId) {
+        if ($userId !== null && $userId !== 0) {
             $query->forCustomers($userId);
-        } elseif ($companyId) {
+        } elseif ($companyId !== null && $companyId !== 0) {
             $query->forCompany($companyId);
         }
 
@@ -103,9 +103,9 @@ readonly class PricingRuleFinderService
             ->whereNull('user_id')
             ->whereNull('company_id');
 
-        if ($userId) {
+        if ($userId !== null && $userId !== 0) {
             $query->forCustomers($userId);
-        } elseif ($companyId) {
+        } elseif ($companyId !== null && $companyId !== 0) {
             $query->forCompany($companyId);
         }
 

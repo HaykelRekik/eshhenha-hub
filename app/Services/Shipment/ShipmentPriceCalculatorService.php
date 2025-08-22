@@ -4,16 +4,16 @@ declare(strict_types=1);
 
 namespace App\Services\Shipment;
 
+use App\DTOs\Shipment\ShipmentPriceCalculationRequest;
+use App\DTOs\Shipment\ShippingCompanyPriceBreakdown;
 use App\Models\ShippingCompany;
-use App\Services\Shipment\DTOs\ShipmentPriceCalculationRequest;
-use App\Services\Shipment\DTOs\ShippingCompanyPriceBreakdown;
 use Illuminate\Support\Collection;
 
 readonly class ShipmentPriceCalculatorService
 {
     public function __construct(
-        private readonly PricingRuleFinderService $pricingRuleFinder,
-        private readonly PriceBreakdownCalculatorService $priceBreakdownCalculator,
+        private PricingRuleFinderService $pricingRuleFinder,
+        private PriceBreakdownCalculatorService $priceBreakdownCalculator,
     ) {}
 
     public static function make(): self
