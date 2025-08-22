@@ -41,10 +41,10 @@ final class AddressBloc
                         Select::make('country_id')
                             ->label(__('Country'))
                             ->required()
-                            ->options(fn(): Collection => cache()->remember(
+                            ->options(fn (): Collection => cache()->remember(
                                 key: 'active_countries_' . app()->getLocale(),
                                 ttl: now()->addDay(),
-                                callback: fn() => Country::query()
+                                callback: fn () => Country::query()
                                     ->whereIsActive(true)
                                     ->orderBy('name_' . app()->getLocale())
                                     ->pluck('name_' . app()->getLocale(), 'id')
@@ -61,7 +61,7 @@ final class AddressBloc
                         Select::make('region_id')
                             ->label(__('Region'))
                             ->required()
-                            ->disabled(fn(Get $get): bool => blank($get('country_id')))
+                            ->disabled(fn (Get $get): bool => blank($get('country_id')))
                             ->searchable()
                             ->options(function (Get $get): Collection {
                                 $countryId = $get('country_id');
@@ -73,7 +73,7 @@ final class AddressBloc
                                 return cache()->remember(
                                     key: "regions_for_country_{$countryId}_" . app()->getLocale(),
                                     ttl: now()->addHour(),
-                                    callback: fn() => Region::query()
+                                    callback: fn () => Region::query()
                                         ->whereIsActive(true)
                                         ->where('country_id', $countryId)
                                         ->orderBy('name_' . app()->getLocale())
@@ -89,7 +89,7 @@ final class AddressBloc
                         Select::make('city_id')
                             ->label(__('City'))
                             ->required()
-                            ->disabled(fn(Get $get): bool => blank($get('region_id')))
+                            ->disabled(fn (Get $get): bool => blank($get('region_id')))
                             ->searchable()
                             ->options(function (Get $get): Collection {
                                 $regionId = $get('region_id');
@@ -100,7 +100,7 @@ final class AddressBloc
                                 return cache()->remember(
                                     key: "cities_for_region_{$regionId}_" . app()->getLocale(),
                                     ttl: now()->addHour(),
-                                    callback: fn() => City::query()
+                                    callback: fn () => City::query()
                                         ->whereIsActive(true)
                                         ->where('region_id', $regionId)
                                         ->pluck('name_' . app()->getLocale(), 'id')

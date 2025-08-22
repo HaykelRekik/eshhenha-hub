@@ -7,26 +7,17 @@ namespace App\Filament\Pages\Auth;
 use App\Enums\Icons\PhosphorIcons;
 use App\Filament\Support\Components\AddressBloc;
 use App\Models\Address;
-use App\Models\City;
 use App\Models\Company;
-use App\Models\Country;
-use App\Models\Region;
 use App\Models\User;
-use App\Rules\SaudiNationalID;
 use Filament\Auth\Pages\Register as BaseRegister;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Schemas\Components\Fieldset;
-use Filament\Schemas\Components\Grid;
-use Filament\Schemas\Components\Utilities\Get;
-use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Components\Wizard;
 use Filament\Schemas\Components\Wizard\Step;
 use Filament\Schemas\Schema;
 use Filament\Support\Enums\Width;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
 
@@ -86,7 +77,6 @@ class Register extends BaseRegister
                                     ->required()
                                     ->unique('users', 'phone_number'),
 
-
                             ]),
 
                         Step::make('Additional Information')
@@ -94,7 +84,7 @@ class Register extends BaseRegister
                             ->schema(function ($get): array {
                                 if ('customer' === $get('role')) {
                                     return [
-                                        AddressBloc::make()
+                                        AddressBloc::make(),
                                     ];
                                 }
 
@@ -148,7 +138,8 @@ class Register extends BaseRegister
     protected function handleRegistration(array $data): Model
     {
         dd($data);
-        return DB::transaction(fn() => tap(User::create([
+
+        return DB::transaction(fn () => tap(User::create([
             'name' => $data['name'],
             'email' => $data['email'],
             'password' => bcrypt($data['password']),
