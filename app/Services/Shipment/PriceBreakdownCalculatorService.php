@@ -13,6 +13,8 @@ readonly class PriceBreakdownCalculatorService
 {
     private const LOCAL_TAX_RATE = 0.15;
 
+    private const INTERNATIONAL_TAX_RATE = 0.00;
+
     public function calculate(
         PricingRule $pricingRule,
         ShippingCompany $shippingCompany,
@@ -65,13 +67,10 @@ readonly class PriceBreakdownCalculatorService
         };
     }
 
-    private function calculateTaxAmount(float $basePrice, float $homePickupCost, float $insuranceCost): float
+    private function calculateTaxAmount(float $basePrice, float $homePickupCost, float $insuranceCost, bool $isInternational = false): float
     {
         $taxableAmount = $basePrice + $homePickupCost + $insuranceCost;
 
-        // For now, assuming local shipment (15% tax)
-        // In the future, this could be enhanced to determine local vs international
-        // based on recipient location or shipping company configuration
-        return $taxableAmount * self::LOCAL_TAX_RATE;
+        return $taxableAmount * ($isInternational ? self::INTERNATIONAL_TAX_RATE : self::LOCAL_TAX_RATE);
     }
 }
