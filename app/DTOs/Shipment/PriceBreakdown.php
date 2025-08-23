@@ -8,9 +8,9 @@ final readonly class PriceBreakdown
 {
     public function __construct(
         public float $basePrice,
-        public float $homePickupCost,
         public float $insuranceCost,
-        public float $taxAmount,
+        public float $homePickupCost,
+        public float $tax,
         public float $total,
     ) {}
 }

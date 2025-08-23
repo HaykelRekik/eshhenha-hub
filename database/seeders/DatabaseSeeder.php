@@ -81,6 +81,7 @@ class DatabaseSeeder extends Seeder
             $this->call([
                 AdminSeeder::class,
                 ContactMessageSeeder::class,
+                PricingRuleSeeder::class,
             ]);
 
         }

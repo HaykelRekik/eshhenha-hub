@@ -4,28 +4,20 @@ declare(strict_types=1);
 
 namespace App\Services\Shipment\Pipeline\Steps;
 
-use App\Services\Shipment\PricingRuleFinderService;
+use App\DTOs\Shipment\ShipmentPriceCalculationRequest;
+use App\Models\PricingRule;
+use Closure;
 
-final readonly class FindPricingRulesStep
+final class FindPricingRulesStep
 {
-    public function __construct(
-        private PricingRuleFinderService $pricingRuleFinder
-    ) {}
-
-    /**
-     * @param  array  $data  ['request' => ShipmentPriceCalculationRequest, 'shipping_companies' => Collection]
-     */
-    public function handle(array $data, callable $next): array
+    public function __invoke(array $data, Closure $next)
     {
+        /** @var ShipmentPriceCalculationRequest $request */
         $request = $data['request'];
-        $shippingCompanyIds = collect($data['shipping_companies'])->pluck('id');
-        $pricingRules = $this->pricingRuleFinder->findApplicableRulesForCompanies(
-            shippingCompanyIds: $shippingCompanyIds,
-            userId: $request->userId,
-            companyId: $request->companyId,
-            weight: $request->weight
-        );
-        $data['pricing_rules'] = $pricingRules;
+
+        $data['pricing_rules'] = PricingRule::query()
+            ->forWeight($request->weight)
+            ->get();
 
         return $next($data);
     }

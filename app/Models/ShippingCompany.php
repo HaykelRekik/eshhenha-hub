@@ -67,6 +67,10 @@ class ShippingCompany extends Model
             'insurance_type' => ShippingCompanyInsuranceType::class,
             'shipping_range' => ShippingRange::class,
             'is_active' => 'boolean',
+            'insurance_value' => 'float',
+            'home_pickup_cost' => 'float',
+            'local_tax_rate' => 'float',
+            'international_tax_rate' => 'float',
         ];
     }
 

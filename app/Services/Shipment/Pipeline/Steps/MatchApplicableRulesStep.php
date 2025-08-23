@@ -4,108 +4,103 @@ declare(strict_types=1);
 
 namespace App\Services\Shipment\Pipeline\Steps;
 
+use App\DTOs\Shipment\ShipmentPriceCalculationRequest;
 use App\Enums\PricingRuleType;
+use App\Models\PricingRule;
+use App\Models\ShippingCompany;
+use Closure;
 use Illuminate\Support\Collection;
 
-class MatchApplicableRulesStep
+final class MatchApplicableRulesStep
 {
-    public function handle(array $data, callable $next): array
+    public function __invoke(array $data, Closure $next)
     {
+        /** @var ShipmentPriceCalculationRequest $request */
         $request = $data['request'];
-        $userId = $request->userId ?? null;
-        $companyId = $request->companyId ?? null;
-        $shippingCompanies = collect($data['shipping_companies']);
-        $pricingRules = collect($data['pricing_rules']);
+        /** @var Collection<int, ShippingCompany> $shippingCompanies */
+        $shippingCompanies = $data['shipping_companies'];
+        /** @var Collection<int, PricingRule> $pricingRules */
+        $pricingRules = $data['pricing_rules'];
 
-        $potentialShippingCompanies = collect();
-        $addedCompanyIds = collect();
+        $matchedRules = [];
+        $processedShippingCompanyIds = [];
 
-        $potentialShippingCompanies = $this->matchUserOrCompanyWithShippingCompany($shippingCompanies, $pricingRules, $userId, $companyId, $addedCompanyIds);
-        $potentialShippingCompanies = $this->matchUserOrCompany($shippingCompanies, $pricingRules, $userId, $companyId, $addedCompanyIds, $potentialShippingCompanies);
-        $potentialShippingCompanies = $this->matchShippingCompanyOnly($shippingCompanies, $pricingRules, $addedCompanyIds, $potentialShippingCompanies);
-        $potentialShippingCompanies = $this->matchGlobalRule($shippingCompanies, $pricingRules, $addedCompanyIds, $potentialShippingCompanies);
+        $rulesByType = $pricingRules->groupBy('type');
 
-        $data['potential_shipping_companies'] = $potentialShippingCompanies->values()->all();
+        // Priority 1: Customer/Company & Shipping Company Specific
+        $this->matchComplexRules($rulesByType, $request, $processedShippingCompanyIds, $matchedRules);
+
+        // Priority 2: Customer/Company Specific
+        $this->matchEntitySpecificRules($rulesByType, $request, $shippingCompanies, $processedShippingCompanyIds, $matchedRules);
+
+        // Priority 3: Shipping Company Specific
+        $this->matchShippingCompanyRules($rulesByType, $processedShippingCompanyIds, $matchedRules);
+
+        // Priority 4: Global Rule
+        $this->matchGlobalRule($rulesByType, $shippingCompanies, $processedShippingCompanyIds, $matchedRules);
+
+        $data['matched_rules'] = $matchedRules;
 
         return $next($data);
     }
 
-    private function matchUserOrCompanyWithShippingCompany(
-        Collection $shippingCompanies,
-        Collection $pricingRules,
-        ?int $userId,
-        ?int $companyId,
-        Collection $addedCompanyIds
-    ): Collection {
-        $result = collect();
-        $shippingCompanies->each(function ($shippingCompany) use ($pricingRules, $userId, $companyId, $addedCompanyIds, &$result): void {
-            $shippingCompanyId = $shippingCompany->id;
-            $rule = $pricingRules->first(fn ($rule): bool => PricingRuleType::determineType($userId, $companyId, $shippingCompanyId) === $rule->type
-                    && ($rule->user_id === $userId || $rule->company_id === $companyId)
-                    && $rule->shipping_company_id === $shippingCompanyId);
-            if ($rule && ! $addedCompanyIds->contains($shippingCompanyId)) {
-                $result->push(['company' => $shippingCompany, 'rule' => $rule]);
-                $addedCompanyIds->push($shippingCompanyId);
+    private function matchComplexRules(Collection $rulesByType, ShipmentPriceCalculationRequest $request, array &$processedShippingCompanyIds, array &$matchedRules): void
+    {
+        $customerShippingCompanyRules = $rulesByType->get(PricingRuleType::CUSTOMER_SHIPPING_COMPANY->value, new Collection());
+        foreach ($customerShippingCompanyRules as $rule) {
+            if ($rule->user_id === $request->userId && !in_array($rule->shipping_company_id, $processedShippingCompanyIds)) {
+                $matchedRules[$rule->shipping_company_id] = $rule;
+                $processedShippingCompanyIds[] = $rule->shipping_company_id;
             }
-        });
+        }
 
-        return $result;
+        $companyShippingCompanyRules = $rulesByType->get(PricingRuleType::COMPANY_SHIPPING_COMPANY->value, new Collection());
+        foreach ($companyShippingCompanyRules as $rule) {
+            if ($rule->company_id === $request->companyId && !in_array($rule->shipping_company_id, $processedShippingCompanyIds)) {
+                $matchedRules[$rule->shipping_company_id] = $rule;
+                $processedShippingCompanyIds[] = $rule->shipping_company_id;
+            }
+        }
     }
 
-    private function matchUserOrCompany(
-        Collection $shippingCompanies,
-        Collection $pricingRules,
-        ?int $userId,
-        ?int $companyId,
-        Collection $addedCompanyIds,
-        Collection $result
-    ): Collection {
-        $shippingCompanies->each(function ($shippingCompany) use ($pricingRules, $userId, $companyId, $addedCompanyIds, &$result): void {
-            $shippingCompanyId = $shippingCompany->id;
-            $rule = $pricingRules->first(fn ($rule): bool => PricingRuleType::determineType($userId, $companyId, null) === $rule->type
-                    && ($rule->user_id === $userId || $rule->company_id === $companyId));
-            if ($rule && ! $addedCompanyIds->contains($shippingCompanyId)) {
-                $result->push(['company' => $shippingCompany, 'rule' => $rule]);
-                $addedCompanyIds->push($shippingCompanyId);
-            }
-        });
+    private function matchEntitySpecificRules(Collection $rulesByType, ShipmentPriceCalculationRequest $request, Collection $shippingCompanies, array &$processedShippingCompanyIds, array &$matchedRules): void
+    {
+        $customerRule = $rulesByType->get(PricingRuleType::CUSTOMER->value, new Collection())->firstWhere('user_id', $request->userId);
+        $companyRule = $rulesByType->get(PricingRuleType::COMPANY->value, new Collection())->firstWhere('company_id', $request->companyId);
 
-        return $result;
+        $applicableRule = $customerRule ?? $companyRule;
+
+        if ($applicableRule) {
+            foreach ($shippingCompanies as $shippingCompany) {
+                if (!in_array($shippingCompany->id, $processedShippingCompanyIds)) {
+                    $matchedRules[$shippingCompany->id] = $applicableRule;
+                    $processedShippingCompanyIds[] = $shippingCompany->id;
+                }
+            }
+        }
     }
 
-    private function matchShippingCompanyOnly(
-        Collection $shippingCompanies,
-        Collection $pricingRules,
-        Collection $addedCompanyIds,
-        Collection $result
-    ): Collection {
-        $shippingCompanies->each(function ($shippingCompany) use ($pricingRules, $addedCompanyIds, &$result): void {
-            $shippingCompanyId = $shippingCompany->id;
-            $rule = $pricingRules->first(fn ($rule): bool => PricingRuleType::determineType(null, null, $shippingCompanyId) === $rule->type
-                    && $rule->shipping_company_id === $shippingCompanyId);
-            if ($rule && ! $addedCompanyIds->contains($shippingCompanyId)) {
-                $result->push(['company' => $shippingCompany, 'rule' => $rule]);
-                $addedCompanyIds->push($shippingCompanyId);
+    private function matchShippingCompanyRules(Collection $rulesByType, array &$processedShippingCompanyIds, array &$matchedRules): void
+    {
+        $shippingCompanyRules = $rulesByType->get(PricingRuleType::SHIPPING_COMPANY->value, new Collection());
+        foreach ($shippingCompanyRules as $rule) {
+            if (!in_array($rule->shipping_company_id, $processedShippingCompanyIds)) {
+                $matchedRules[$rule->shipping_company_id] = $rule;
+                $processedShippingCompanyIds[] = $rule->shipping_company_id;
             }
-        });
-
-        return $result;
+        }
     }
 
-    private function matchGlobalRule(
-        Collection $shippingCompanies,
-        Collection $pricingRules,
-        Collection $addedCompanyIds,
-        Collection $result
-    ): Collection {
-        $globalRule = $pricingRules->first(fn ($rule): bool => PricingRuleType::GLOBAL === $rule->type);
-        $shippingCompanies->each(function ($shippingCompany) use ($globalRule, $addedCompanyIds, &$result): void {
-            if ($globalRule && ! $addedCompanyIds->contains($shippingCompany->id)) {
-                $result->push(['company' => $shippingCompany, 'rule' => $globalRule]);
-                $addedCompanyIds->push($shippingCompany->id);
-            }
-        });
+    private function matchGlobalRule(Collection $rulesByType, Collection $shippingCompanies, array &$processedShippingCompanyIds, array &$matchedRules): void
+    {
+        $globalRule = $rulesByType->get(PricingRuleType::GLOBAL->value, new Collection())->first();
 
-        return $result;
+        if ($globalRule) {
+            foreach ($shippingCompanies as $shippingCompany) {
+                if (!in_array($shippingCompany->id, $processedShippingCompanyIds)) {
+                    $matchedRules[$shippingCompany->id] = $globalRule;
+                }
+            }
+        }
     }
 }

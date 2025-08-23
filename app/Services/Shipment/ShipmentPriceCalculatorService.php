@@ -17,21 +17,11 @@ use Illuminate\Pipeline\Pipeline;
  */
 final readonly class ShipmentPriceCalculatorService
 {
-    /**
-     * @param  FindAvailableShippingCompaniesStep  $findCompaniesStep  Step to find available shipping companies
-     * @param  FindPricingRulesStep  $findPricingRulesStep  Step to find applicable pricing rules
-     * @param  CalculatePriceBreakdownsStep  $calculateBreakdownsStep  Step to calculate price breakdowns
-     */
-    public function __construct(
-        private FindAvailableShippingCompaniesStep $findCompaniesStep,
-        private FindPricingRulesStep $findPricingRulesStep,
-        private CalculatePriceBreakdownsStep $calculateBreakdownsStep
-    ) {}
 
     /**
      * Calculate shipment prices for all available shipping companies
      *
-     * @param  ShipmentPriceCalculationRequest  $request  The calculation request
+     * @param ShipmentPriceCalculationRequest $request The calculation request
      * @return array<int, ShippingCompanyPriceBreakdown> Array of price breakdowns indexed by shipping company ID
      */
     public function calculatePrices(ShipmentPriceCalculationRequest $request): array
@@ -42,10 +32,10 @@ final readonly class ShipmentPriceCalculatorService
 
         return $pipeline->send($data)
             ->through([
-                $this->findCompaniesStep,
-                $this->findPricingRulesStep,
+                new FindAvailableShippingCompaniesStep(),
+                new FindPricingRulesStep(),
                 new MatchApplicableRulesStep(),
-                $this->calculateBreakdownsStep,
+                new CalculatePriceBreakdownsStep(),
             ])
             ->thenReturn();
     }

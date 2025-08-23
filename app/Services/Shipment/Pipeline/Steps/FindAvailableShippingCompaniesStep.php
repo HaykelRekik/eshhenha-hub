@@ -4,33 +4,26 @@ declare(strict_types=1);
 
 namespace App\Services\Shipment\Pipeline\Steps;
 
+use App\DTOs\Shipment\ShipmentPriceCalculationRequest;
 use App\Models\ShippingCompany;
+use Closure;
 
-/**
- * Pipeline step to find available shipping companies for the given region
- */
-final readonly class FindAvailableShippingCompaniesStep
+final class FindAvailableShippingCompaniesStep
 {
-    /**
-     * Execute the step to find available shipping companies
-     *
-     * @param  array  $data  ['request' => ShipmentPriceCalculationRequest]
-     * @param  callable  $next  The next step in the pipeline
-     * @return array The updated context
-     */
-    public function handle(array $data, callable $next): array
+    public function __invoke(array $data, Closure $next)
     {
+        /** @var ShipmentPriceCalculationRequest $request */
         $request = $data['request'];
-        $regionId = $request->recipientRegionId;
-        $homePickup = $request->homePickup;
 
-        $shippingCompanies = ShippingCompany::query()
-            ->OperatesInRegion($regionId)
+        $query = ShippingCompany::query()
             ->where('is_active', true)
-            ->when($homePickup, fn ($q) => $q->whereNotNull('home_pickup_cost')->where('home_pickup_cost', '>', 0))
-            ->get();
+            ->OperatesInRegion($request->recipientRegionId);
 
-        $data['shipping_companies'] = $shippingCompanies;
+        if ($request->homePickup) {
+            $query->whereNotNull('home_pickup_cost')->where('home_pickup_cost', '>', 0);
+        }
+
+        $data['shipping_companies'] = $query->get(['id', 'name', 'home_pickup_cost', 'local_tax_rate', 'insurance_type', 'insurance_value'])->keyBy('id');
 
         return $next($data);
     }
