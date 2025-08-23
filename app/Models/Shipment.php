@@ -46,6 +46,9 @@ class Shipment extends Model
         'payment_method',
         'status',
         'raw_response',
+        'sender_city_id',
+        'sender_region_id',
+        'sender_country_id',
     ];
 
     public function senderable(): MorphTo

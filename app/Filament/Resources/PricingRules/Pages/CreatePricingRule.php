@@ -47,7 +47,7 @@ class CreatePricingRule extends CreateRecord
             if ($interval['weight_from'] >= $interval['weight_to']) {
                 Notification::make()
                     ->title(__('Validation Error'))
-                    ->body(__('Interval :number: Weight From (:from kg) must be less than Weight To (:to kg)', [
+                    ->body(__('Interval :number: Weight From (:from ' . __('KG') . ') must be less than Weight To (:to ' . __('KG') . ')', [
                         'number' => $i + 1,
                         'from' => $interval['weight_from'],
                         'to' => $interval['weight_to'],
@@ -65,14 +65,38 @@ class CreatePricingRule extends CreateRecord
                     ->body(__('Interval :current overlaps with interval :next. Range :currentRange conflicts with :nextRange', [
                         'current' => $i + 1,
                         'next' => $i + 2,
-                        'currentRange' => $interval['weight_from'] . '-' . $interval['weight_to'] . ' kg',
-                        'nextRange' => $nextInterval['weight_from'] . '-' . $nextInterval['weight_to'] . ' kg',
+                        'currentRange' => $interval['weight_from'] . '-' . $interval['weight_to'] . ' ' . __('KG'),
+                        'nextRange' => $nextInterval['weight_from'] . '-' . $nextInterval['weight_to'] . ' ' . __('KG'),
                     ]))
                     ->danger()
                     ->send();
 
                 $this->halt(true);
             }
+
+            $exists = PricingRule::query()
+                ->where('type', $data['type'])
+                ->when($data['user_id'] ?? null, fn ($q, $userId) => $q->where('user_id', $userId))
+                ->when($data['company_id'] ?? null, fn ($q, $companyId) => $q->where('company_id', $companyId))
+                ->when($data['shipping_company_id'] ?? null, fn ($q, $shipId) => $q->where('shipping_company_id', $shipId))
+                ->where(function ($q) use ($interval): void {
+                    $q->where('weight_from', '<=', $interval['weight_to'])
+                        ->where('weight_to', '>=', $interval['weight_from']);
+                })
+                ->exists();
+            if ($exists) {
+                Notification::make()
+                    ->title(__('Validation Error'))
+                    ->body(__('Range :range conflicts with an existing pricing rule.', [
+                        'range' => $interval['weight_from'] . '-' . $interval['weight_to'] . ' ' . __('KG'),
+
+                    ]))
+                    ->danger()
+                    ->send();
+
+                $this->halt(true);
+            }
+
         }
 
         return $data;
