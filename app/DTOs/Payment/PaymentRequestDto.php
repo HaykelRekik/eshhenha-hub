@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\DTOs\Payment;
 
-readonly class PaymentRequestDto
+final readonly class PaymentRequestDto
 {
     public function __construct(
         public float $amount,

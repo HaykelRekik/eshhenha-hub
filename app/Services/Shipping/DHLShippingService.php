@@ -6,11 +6,6 @@ namespace App\Services\Shipping;
 
 use App\Contracts\ShippingServiceInterface;
 
-use Exception;
-use Illuminate\Http\Client\Response;
-use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Facades\Log;
-
 /**
  * DHL Express shipping service implementation
  */
