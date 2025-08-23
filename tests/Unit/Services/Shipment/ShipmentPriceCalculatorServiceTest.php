@@ -240,7 +240,7 @@ it('calculates price with insurance cost', function (): void {
         ->and($prices[$this->shippingCompany2->id]->breakdown->insuranceCost)->toBe(25.0); // fixed amount
 });
 
-it('applies rules based on priority', function () {
+it('applies rules based on priority', function (): void {
     $service = new ShipmentPriceCalculatorService();
 
     // 1. Global rule

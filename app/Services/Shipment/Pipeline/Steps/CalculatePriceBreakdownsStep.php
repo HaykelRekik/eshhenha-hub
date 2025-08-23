@@ -10,7 +10,6 @@ use App\DTOs\Shipment\ShippingCompanyPriceBreakdown;
 use App\Enums\ShippingCompanyInsuranceType;
 use App\Models\PricingRule;
 use App\Models\ShippingCompany;
-use Closure;
 use Illuminate\Support\Collection;
 
 final class CalculatePriceBreakdownsStep

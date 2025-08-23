@@ -23,7 +23,6 @@ enum PricingRuleType: string implements HasColor, HasLabel
      */
     public static function determineType(?int $customerId, ?int $companyId, ?int $shippingCompanyId): PricingRuleType
     {
-        // We use !! to cast the IDs to booleans (true if not null/0, false if null/0)
         $state = [
             'customer' => (bool) $customerId,
             'company' => (bool) $companyId,

@@ -46,17 +46,25 @@ final class MatchApplicableRulesStep
 
     private function matchComplexRules(Collection $rulesByType, ShipmentPriceCalculationRequest $request, array &$processedShippingCompanyIds, array &$matchedRules): void
     {
-        $customerShippingCompanyRules = $rulesByType->get(PricingRuleType::CUSTOMER_SHIPPING_COMPANY->value, new Collection());
-        foreach ($customerShippingCompanyRules as $rule) {
-            if ($rule->user_id === $request->userId && ! in_array($rule->shipping_company_id, $processedShippingCompanyIds)) {
-                $matchedRules[$rule->shipping_company_id] = $rule;
-                $processedShippingCompanyIds[] = $rule->shipping_company_id;
-            }
-        }
+        $complexRuleTypes = [
+            PricingRuleType::CUSTOMER_SHIPPING_COMPANY->value => fn ($rule): bool => $rule->user_id === $request->userId,
+            PricingRuleType::COMPANY_SHIPPING_COMPANY->value => fn ($rule): bool => $rule->company_id === $request->companyId,
+        ];
 
-        $companyShippingCompanyRules = $rulesByType->get(PricingRuleType::COMPANY_SHIPPING_COMPANY->value, new Collection());
-        foreach ($companyShippingCompanyRules as $rule) {
-            if ($rule->company_id === $request->companyId && ! in_array($rule->shipping_company_id, $processedShippingCompanyIds)) {
+        foreach ($complexRuleTypes as $type => $condition) {
+            $this->processComplexRules(
+                $rulesByType->get($type, new Collection()),
+                $processedShippingCompanyIds,
+                $matchedRules,
+                $condition
+            );
+        }
+    }
+
+    private function processComplexRules(Collection $rules, array &$processedShippingCompanyIds, array &$matchedRules, callable $condition): void
+    {
+        foreach ($rules as $rule) {
+            if ($condition($rule) && ! in_array($rule->shipping_company_id, $processedShippingCompanyIds)) {
                 $matchedRules[$rule->shipping_company_id] = $rule;
                 $processedShippingCompanyIds[] = $rule->shipping_company_id;
             }
