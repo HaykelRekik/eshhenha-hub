@@ -13,5 +13,6 @@ final readonly class ShipmentPriceCalculationRequest
         public float $weight,
         public bool $homePickup,
         public float $shipmentValue,
+        public bool $insured,
     ) {}
 }

@@ -5,8 +5,6 @@ declare(strict_types=1);
 namespace App\Services\Shipment\Pipeline\Steps;
 
 use App\Models\ShippingCompany;
-use App\Services\Shipment\Pipeline\ShipmentPriceCalculationContext;
-use Illuminate\Support\Collection;
 
 /**
  * Pipeline step to find available shipping companies for the given region
@@ -16,36 +14,24 @@ final readonly class FindAvailableShippingCompaniesStep
     /**
      * Execute the step to find available shipping companies
      *
-     * @param  ShipmentPriceCalculationContext  $context  The current context
+     * @param  array  $data  ['request' => ShipmentPriceCalculationRequest]
      * @param  callable  $next  The next step in the pipeline
-     * @return ShipmentPriceCalculationContext The updated context
+     * @return array The updated context
      */
-    public function handle(ShipmentPriceCalculationContext $context, callable $next): ShipmentPriceCalculationContext
+    public function handle(array $data, callable $next): array
     {
-        $availableShippingCompanies = $this->getAvailableShippingCompanies($context->getRecipientRegionId());
+        $request = $data['request'];
+        $regionId = $request->recipientRegionId;
+        $homePickup = $request->homePickup;
 
-        $updatedContext = $context->withAvailableShippingCompanies($availableShippingCompanies);
-
-        // If no companies are available, return early with empty results
-        if ( ! $updatedContext->hasAvailableShippingCompanies()) {
-            return $updatedContext->withResults([]);
-        }
-
-        return $next($updatedContext);
-    }
-
-    /**
-     * Get shipping companies that can deliver to the specified region
-     *
-     * @param  int  $regionId  The recipient region ID
-     * @return Collection<int, ShippingCompany> Collection of available shipping companies
-     */
-    private function getAvailableShippingCompanies(int $regionId): Collection
-    {
-        return ShippingCompany::query()
+        $shippingCompanies = ShippingCompany::query()
             ->OperatesInRegion($regionId)
             ->where('is_active', true)
-            ->get()
-            ->collect();
+            ->when($homePickup, fn ($q) => $q->whereNotNull('home_pickup_cost')->where('home_pickup_cost', '>', 0))
+            ->get();
+
+        $data['shipping_companies'] = $shippingCompanies;
+
+        return $next($data);
     }
 }

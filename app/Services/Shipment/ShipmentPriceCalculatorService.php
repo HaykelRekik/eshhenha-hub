@@ -4,11 +4,12 @@ declare(strict_types=1);
 
 namespace App\Services\Shipment;
 
+use App\DTOs\Shipment\ShippingCompanyPriceBreakdown;
 use App\DTOs\Shipment\ShipmentPriceCalculationRequest;
-use App\Services\Shipment\Pipeline\ShipmentPriceCalculationContext;
 use App\Services\Shipment\Pipeline\Steps\CalculatePriceBreakdownsStep;
 use App\Services\Shipment\Pipeline\Steps\FindAvailableShippingCompaniesStep;
 use App\Services\Shipment\Pipeline\Steps\FindPricingRulesStep;
+use App\Services\Shipment\Pipeline\Steps\MatchApplicableRulesStep;
 use Illuminate\Pipeline\Pipeline;
 
 /**
@@ -28,41 +29,24 @@ final readonly class ShipmentPriceCalculatorService
     ) {}
 
     /**
-     * Create a new instance of the service with default dependencies
-     */
-    public static function make(): self
-    {
-        return new self(
-            findCompaniesStep: new FindAvailableShippingCompaniesStep(),
-            findPricingRulesStep: new FindPricingRulesStep(
-                new PricingRuleFinderService()
-            ),
-            calculateBreakdownsStep: new CalculatePriceBreakdownsStep(
-                new PriceBreakdownCalculatorService()
-            )
-        );
-    }
-
-    /**
      * Calculate shipment prices for all available shipping companies
      *
      * @param  ShipmentPriceCalculationRequest  $request  The calculation request
-     * @return array<int, \App\DTOs\Shipment\ShippingCompanyPriceBreakdown> Array of price breakdowns indexed by shipping company ID
+     * @return array<int, ShippingCompanyPriceBreakdown> Array of price breakdowns indexed by shipping company ID
      */
     public function calculatePrices(ShipmentPriceCalculationRequest $request): array
     {
         $pipeline = app(Pipeline::class);
 
-        $context = ShipmentPriceCalculationContext::fromRequest($request);
+        $data = ['request' => $request];
 
-        $resultContext = $pipeline->send($context)
+        return $pipeline->send($data)
             ->through([
                 $this->findCompaniesStep,
                 $this->findPricingRulesStep,
+                new MatchApplicableRulesStep(),
                 $this->calculateBreakdownsStep,
             ])
             ->thenReturn();
-
-        return $resultContext->getResults();
     }
 }

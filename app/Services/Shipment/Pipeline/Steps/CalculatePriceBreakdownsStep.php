@@ -5,53 +5,44 @@ declare(strict_types=1);
 namespace App\Services\Shipment\Pipeline\Steps;
 
 use App\DTOs\Shipment\ShippingCompanyPriceBreakdown;
-use App\Services\Shipment\Pipeline\ShipmentPriceCalculationContext;
-use App\Services\Shipment\PriceBreakdownCalculatorService;
 
 /**
  * Pipeline step to calculate price breakdowns for each shipping company
  */
 final readonly class CalculatePriceBreakdownsStep
 {
-    public function __construct(
-        private PriceBreakdownCalculatorService $priceBreakdownCalculator
-    ) {}
+    public $priceBreakdownCalculator;
 
     /**
      * Execute the step to calculate price breakdowns
      *
-     * @param  ShipmentPriceCalculationContext  $context  The current context
-     * @param  callable  $next  The next step in the pipeline
-     * @return ShipmentPriceCalculationContext The updated context
+     * @param  array  $data  ['request' => ShipmentPriceCalculationRequest, 'potential_shipping_companies' => array]
+     * @return array<int, ShippingCompanyPriceBreakdown> The updated context
      */
-    public function handle(ShipmentPriceCalculationContext $context, callable $next): ShipmentPriceCalculationContext
+    public function handle(array $data, callable $next): array
     {
-        $pricingRulesMap = $context->pricingRules->keyBy('shipping_company_id');
+        $request = $data['request'];
         $results = [];
 
-        foreach ($context->availableShippingCompanies as $shippingCompany) {
-            $pricingRule = $pricingRulesMap->get($shippingCompany->id);
-
-            if ( ! $pricingRule) {
-                continue;
-            }
+        foreach ($data['potential_shipping_companies'] as $entry) {
+            $company = $entry['company'];
+            $rule = $entry['rule'];
 
             $priceBreakdown = $this->priceBreakdownCalculator->calculate(
-                pricingRule: $pricingRule,
-                shippingCompany: $shippingCompany,
-                weight: $context->getWeight(),
-                homePickup: $context->getHomePickup(),
-                shipmentValue: $context->getShipmentValue()
+                pricingRule: $rule,
+                shippingCompany: $company,
+                weight: $request->weight,
+                homePickup: $request->homePickup,
+                shipmentValue: $request->shipmentValue,
+                insured: $request->insured
             );
 
-            $results[$shippingCompany->id] = new ShippingCompanyPriceBreakdown(
-                name: $shippingCompany->name,
+            $results[$company->id] = new ShippingCompanyPriceBreakdown(
+                name: $company->name,
                 breakdown: $priceBreakdown
             );
         }
 
-        $updatedContext = $context->withResults($results);
-
-        return $next($updatedContext);
+        return $next($results);
     }
 }
