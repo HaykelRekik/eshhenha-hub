@@ -31,7 +31,11 @@ return new class() extends Migration
             $table->string('zip_code')
                 ->nullable();
 
-            $table->boolean('is_default')->default(false);
+            $table->boolean('is_default')
+                ->default(false);
+
+            $table->boolean('is_recipient_address')
+                ->default(false);
 
             $table->foreignId('country_id')->nullable()
                 ->constrained()

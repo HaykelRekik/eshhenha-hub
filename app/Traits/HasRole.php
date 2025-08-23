@@ -11,7 +11,7 @@ trait HasRole
 {
     public function hasRole(string|UserRole $role): bool
     {
-        $this->resoleRole(role: $role);
+        $this->resolveRole(role: $role);
 
         return $this->role === $role;
     }
@@ -32,7 +32,7 @@ trait HasRole
      */
     public function scopeRole(Builder $query, string|UserRole $role): Builder
     {
-        $this->resoleRole(role: $role);
+        $this->resolveRole(role: $role);
 
         return $query->where('role', $role);
     }
@@ -43,7 +43,7 @@ trait HasRole
      * @param  string|UserRole  $role  The role to resolve
      * @return UserRole The resolved UserRole enum or null if invalid
      */
-    private function resoleRole(string|UserRole $role): UserRole
+    private function resolveRole(string|UserRole $role): UserRole
     {
         if (is_string($role)) {
             return UserRole::tryFrom(mb_strtolower($role));

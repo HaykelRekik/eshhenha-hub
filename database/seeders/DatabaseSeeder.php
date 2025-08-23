@@ -28,7 +28,6 @@ class DatabaseSeeder extends Seeder
                 CountrySeeder::class,
                 RegionSeeder::class,
                 CitySeeder::class,
-                SettingsSeeder::class,
             ]
         );
 
@@ -82,6 +81,7 @@ class DatabaseSeeder extends Seeder
             $this->call([
                 AdminSeeder::class,
                 ContactMessageSeeder::class,
+                PricingRuleSeeder::class,
             ]);
 
         }

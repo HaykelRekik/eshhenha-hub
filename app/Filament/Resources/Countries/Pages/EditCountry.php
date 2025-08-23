@@ -7,6 +7,7 @@ namespace App\Filament\Resources\Countries\Pages;
 use App\Filament\Resources\Countries\CountryResource;
 use App\Traits\RedirectToIndex;
 use Filament\Resources\Pages\EditRecord;
+use Filament\Schemas\Components\Tabs\Tab;
 
 class EditCountry extends EditRecord
 {
@@ -17,6 +18,11 @@ class EditCountry extends EditRecord
     public function hasCombinedRelationManagerTabsWithContent(): bool
     {
         return true;
+    }
+
+    public function getContentTabComponent(): Tab
+    {
+        return parent::getContentTabComponent()->columns(null);
     }
 
     public function getContentTabLabel(): ?string

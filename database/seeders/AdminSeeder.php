@@ -24,7 +24,7 @@ class AdminSeeder extends Seeder
                 'role' => 'admin',
                 'is_active' => true,
                 'national_id' => '00000000',
-                'phone_number' => '96',
+                'phone_number' => '+966 500010001',
             ]
         );
     }

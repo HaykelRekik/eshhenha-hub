@@ -6,9 +6,11 @@ namespace App\Models;
 
 use App\Enums\ShippingCompanyInsuranceType;
 use App\Enums\ShippingRange;
+use App\Policies\ShippingCompanyPolicy;
 use App\Traits\HasActiveScope;
 use App\Traits\HasAddresses;
 use Illuminate\Database\Eloquent\Attributes\Scope;
+use Illuminate\Database\Eloquent\Attributes\UsePolicy;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -17,6 +19,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\HtmlString;
 
+#[UsePolicy(ShippingCompanyPolicy::class)]
 class ShippingCompany extends Model
 {
     use HasActiveScope, HasAddresses, HasFactory;
@@ -29,6 +32,8 @@ class ShippingCompany extends Model
         'is_active',
         'insurance_type',
         'insurance_value',
+        'local_tax_rate',
+        'international_tax_rate',
         'bank_code',
         'bank_account_number',
         'iban',
@@ -62,6 +67,10 @@ class ShippingCompany extends Model
             'insurance_type' => ShippingCompanyInsuranceType::class,
             'shipping_range' => ShippingRange::class,
             'is_active' => 'boolean',
+            'insurance_value' => 'float',
+            'home_pickup_cost' => 'float',
+            'local_tax_rate' => 'float',
+            'international_tax_rate' => 'float',
         ];
     }
 

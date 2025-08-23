@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace App\Models;
 
-use App\Traits\HasAddresses;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -13,12 +12,18 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Company extends Model
 {
-    use HasAddresses, HasFactory;
+    use HasFactory;
 
     protected $fillable = [
         'name',
         'email',
         'phone_number',
+        'cr_number',
+        'vat_number',
+        'iban',
+        'swift',
+        'bank_code',
+        'bank_account_number',
         'logo',
         'is_active',
         'user_id',

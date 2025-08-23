@@ -10,6 +10,7 @@ use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
+use Filament\Support\Icons\Heroicon;
 
 class BannerForm
 {
@@ -55,10 +56,10 @@ class BannerForm
                             ->autosize(),
 
                         TextInput::make('link')
-                            ->label('Link')
+                            ->label(__('Link'))
                             ->nullable()
                             ->url()
-                            ->prefixIcon('heroicon-o-link')
+                            ->prefixIcon(Heroicon::OutlinedLink)
                             ->columnSpan(2)
                             ->helperText(__('The user will be redirected to this link after clicking on the banner.')),
 

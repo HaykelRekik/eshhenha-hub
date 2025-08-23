@@ -5,15 +5,21 @@ declare(strict_types=1);
 namespace App\Providers;
 
 use App\Enums\Icons\PhosphorIcons;
-use BezhanSalleh\FilamentLanguageSwitch\LanguageSwitch;
+
+use BezhanSalleh\LanguageSwitch\LanguageSwitch;
 use Filament\Actions\CreateAction;
+use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
+use Filament\Infolists\Components\ImageEntry;
+use Filament\Schemas\Components\Fieldset;
+use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Section;
-use Filament\Schemas\Components\Tabs\Tab;
+use Filament\Schemas\Components\Tabs;
 use Filament\Schemas\Components\Wizard;
 use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Support\ServiceProvider;
 use Ysfkaya\FilamentPhoneInput\Forms\PhoneInput;
@@ -42,15 +48,13 @@ class UtilityServiceProvider extends ServiceProvider
 
         Select::configureUsing(modifyUsing: fn (Select $select): Select => $select->native(false));
 
-        Section::configureUsing(modifyUsing: fn (Section $section): Section => $section->columns(2)->columnSpanFull());
-
-        Tab::configureUsing(modifyUsing: fn (Tab $tab): Tab => $tab->columnSpanFull());
-
         Wizard::configureUsing(modifyUsing: fn (Wizard $wizard): Wizard => $wizard->columnSpanFull()->skippable(app()->isLocal()));
 
         ToggleButtons::configureUsing(modifyUsing: fn (ToggleButtons $toggleButtons): ToggleButtons => $toggleButtons->inline());
 
         TextInput::configureUsing(modifyUsing: fn (TextInput $input): TextInput => $input->maxLength(255));
+
+        TextColumn::configureUsing(modifyUsing: fn (TextColumn $column): TextColumn => $column->placeholder(__('Not specified')));
 
         ImageColumn::configureUsing(modifyUsing: fn (ImageColumn $column): ImageColumn => $column->extraImgAttributes(['loading' => 'lazy']));
 
@@ -61,6 +65,30 @@ class UtilityServiceProvider extends ServiceProvider
             ->excludeCountries(['IL'])
             ->autoPlaceholder('aggressive')
             ->defaultCountry('SA'));
+
+        foreach ([
+            Section::class,
+            Grid::class,
+            Fieldset::class,
+        ] as $component) {
+            /** @var $component Section|Grid|Tabs|Fieldset */
+            $component::configureUsing(
+                modifyUsing: fn ($instance) => $instance->columns(2)->columnSpanFull()
+            );
+        }
+
+        Tabs::configureUsing(modifyUsing: fn (Tabs $tabs): Tabs => $tabs->columnSpanFull());
+
+        FileUpload::configureUsing(fn (FileUpload $fileUpload): FileUpload => $fileUpload
+            ->disk('public')
+            ->moveFiles()
+            ->visibility('public'));
+
+        ImageColumn::configureUsing(fn (ImageColumn $imageColumn): ImageColumn => $imageColumn
+            ->visibility('public'));
+
+        ImageEntry::configureUsing(fn (ImageEntry $imageEntry): ImageEntry => $imageEntry
+            ->visibility('public'));
 
     }
 }

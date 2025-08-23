@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources\Banners\Tables;
 
 use Filament\Actions\EditAction;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
@@ -32,7 +33,7 @@ class BannersTable
                     ->searchable(['description_ar', 'description_en', 'description_ur']),
 
                 IconColumn::make('link')
-                    ->icon('heroicon-o-link')
+                    ->icon(Heroicon::OutlinedLink)
                     ->color('info')
                     ->placeholder(__('Not specified'))
                     ->label(__('Link')),

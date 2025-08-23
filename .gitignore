@@ -8,6 +8,9 @@
 /.fleet
 /.idea
 /.nova
+/.cursor
+/.junie
+.github
 /.phpunit.cache
 /.vscode
 /.zed
@@ -22,3 +25,7 @@
 Homestead.json
 Homestead.yaml
 Thumbs.db
+.cursor/mcp.json
+CLAUDE.md
+GEMINI.md
+shipment-pricing-feature.md

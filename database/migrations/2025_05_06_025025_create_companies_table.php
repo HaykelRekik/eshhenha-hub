@@ -22,6 +22,15 @@ return new class() extends Migration
             $table->string('logo')
                 ->nullable();
 
+            $table->string('bank_code')
+                ->nullable();
+            $table->string('bank_account_number')
+                ->nullable();
+            $table->string('iban')
+                ->nullable();
+            $table->string('swift')
+                ->nullable();
+
             $table->boolean('is_active')
                 ->default(true);
 

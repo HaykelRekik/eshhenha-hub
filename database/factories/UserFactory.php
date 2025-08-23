@@ -72,7 +72,7 @@ class UserFactory extends Factory
         return $this->afterCreating(function (User $user): void {
             Company::factory()
                 ->for($user)
-                ->has(Address::factory(), 'address')
+//                ->has(Address::factory(), 'address')
                 ->has(
                     Warehouse::factory()->count(2)
                         ->has(Address::factory(), 'address')

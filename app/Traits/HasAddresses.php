@@ -16,7 +16,7 @@ trait HasAddresses
      */
     public function address(): MorphOne
     {
-        return $this->morphOne(Address::class, 'addressable');
+        return $this->morphOne(Address::class, 'addressable')->where('is_recipient_address', false);
     }
 
     /**
@@ -25,6 +25,11 @@ trait HasAddresses
      */
     public function addresses(): MorphMany
     {
-        return $this->morphMany(Address::class, 'addressable');
+        return $this->morphMany(Address::class, 'addressable')->where('is_recipient_address', false);
+    }
+
+    public function recipientsAddresses(): MorphMany
+    {
+        return $this->morphMany(Address::class, 'addressable')->where('is_recipient_address', true);
     }
 }

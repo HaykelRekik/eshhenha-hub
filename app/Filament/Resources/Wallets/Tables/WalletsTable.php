@@ -4,19 +4,16 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Wallets\Tables;
 
-use App\Enums\WalletTransactionType;
+use App\Enums\Icons\PhosphorIcons;
+use App\Filament\Resources\Wallets\Actions\AddTransactionAction;
 use App\Models\Wallet;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
-use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\TextInput;
-use Filament\Schemas\Components\Grid;
+use Filament\Notifications\Notification;
 use Filament\Support\Enums\FontWeight;
+use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -31,7 +28,7 @@ class WalletsTable
             ->columns([
                 TextColumn::make('user.name')
                     ->label(__('User account'))
-                    ->icon('phosphor-cardholder-duotone')
+                    ->icon(PhosphorIcons::CardholderDuotone)
                     ->weight(FontWeight::Medium)
                     ->description(fn (Wallet $record): ?string => $record->user?->company?->name)
                     ->searchable(),
@@ -68,79 +65,62 @@ class WalletsTable
                     ->preload(),
             ])
             ->recordActions([
-                EditAction::make(),
-                ViewAction::make(),
-                //                ActionGroup::make([
-                //
-                //                ]),
-            ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
+                ActionGroup::make([
+                    AddTransactionAction::make(),
+
+                    ViewAction::make()
+                        ->label(__('Wallet details'))
+                        ->icon(Heroicon::DocumentMagnifyingGlass),
+
+                    Action::make('lock')
+                        ->label(__('Lock Wallet'))
+                        ->icon('heroicon-o-lock-closed')
+                        ->color('danger')
+                        ->hidden(fn ($record) => $record->is_locked)
+                        ->requiresConfirmation()
+                        ->modalHeading(__('Lock Wallet'))
+                        ->modalDescription(__('You are about to lock this wallet. This will prevent the user from making any transactions. Please provide a reason for this action.'))
+                        ->schema([
+                            Textarea::make('lock_reason')
+                                ->label(__('Reason'))
+                                ->maxLength(500)
+                                ->autosize(),
+                        ])
+                        ->action(function ($record, array $data): void {
+                            $record->update([
+                                'is_locked' => true,
+                                'lock_reason' => $data['lock_reason'],
+                            ]);
+
+                            Notification::make()
+                                ->success()
+                                ->title(__('Wallet Locked Successfully'))
+                                ->body(__('The wallet has been locked. The user cannot make transactions until unlocked.'))
+                                ->send();
+                        }),
+
+                    Action::make('unlock')
+                        ->label(__('Activate Wallet'))
+                        ->icon(Heroicon::LockOpen)
+                        ->color('success')
+                        ->hidden(fn ($record): bool => ! $record->is_locked)
+                        ->requiresConfirmation()
+                        ->modalHeading(__('Unlock Wallet'))
+                        ->modalDescription(__('You are about to unlock this wallet. This will allow the user to make transactions again. Please confirm this action.'))
+                        ->action(function ($record): void {
+                            $record->update([
+                                'is_locked' => false,
+                                'lock_reason' => null,
+                            ]);
+
+                            Notification::make()
+                                ->success()
+                                ->title(__('Wallet Unlocked Successfully'))
+                                ->body(__('The wallet has been unlocked. The user can now make transactions again.'))
+                                ->send();
+
+                        }),
                 ]),
             ]);
-    }
-
-    protected static function getAddTransactionAction(): Action
-    {
-        return Action::make('addTransaction')
-            ->label(__('Add Transaction'))
-            ->icon('heroicon-o-plus-circle')
-            ->color('primary')
-            ->modalHeading(fn (Wallet $record) => __('Add Transaction for :user', ['user' => $record->user->name]))
-            ->modalDescription(__('This action will create a new transaction and update the wallet balance accordingly. Please be careful.'))
-            ->modalSubmitActionLabel(__('Confirm Transaction'))
-            ->schema(static::getTransactionFormSchema())
-            ->action(function (array $data, Wallet $record, WalletTransactionService $walletService): void {
-                try {
-                    $walletService->createTransaction(
-                        wallet: $record,
-                        type: WalletTransactionType::from($data['type']),
-                        amount: (float) $data['amount'],
-                        reason: $data['reason']
-                    );
-
-                    Notification::make()
-                        ->title(__('Transaction created successfully'))
-                        ->success()
-                        ->send();
-
-                } catch (Exception $e) {
-                    Notification::make()
-                        ->title(__('Error processing transaction'))
-                        ->body($e->getMessage())
-                        ->danger()
-                        ->send();
-                }
-            });
-    }
-
-    protected static function getTransactionFormSchema(): array
-    {
-        return [
-            Grid::make()
-                ->columns(2)
-                ->schema([
-                    Select::make('type')
-                        ->label(__('Transaction Type'))
-                        ->options(WalletTransactionType::class)
-                        ->required()
-                        ->searchable(),
-
-                    TextInput::make('amount')
-                        ->label(__('Amount'))
-                        ->required()
-                        ->numeric()
-                        ->minValue(0.01)
-                        ->saudiRiyal(),
-                ]),
-
-            Textarea::make('reason')
-                ->label(__('Reason / Note'))
-                ->helperText(__('This will be stored for administrative reference.'))
-                ->nullable()
-                ->maxLength(500)
-                ->rows(3),
-        ];
     }
 }
