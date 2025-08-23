@@ -18,7 +18,7 @@ use Tests\TestCase;
 
 uses(TestCase::class, RefreshDatabase::class);
 
-beforeEach(function () {
+beforeEach(function (): void {
     // Create a user, company, and two shipping companies
     $this->user = User::factory()->create();
     $this->company = Company::factory()->create();
@@ -91,7 +91,7 @@ beforeEach(function () {
     ]);
 });
 
-it('calculates price using global rule when no other rules match', function () {
+it('calculates price using global rule when no other rules match', function (): void {
     $request = new ShipmentPriceCalculationRequest(
         recipientRegionId: $this->region->id,
         userId: null,
@@ -111,7 +111,7 @@ it('calculates price using global rule when no other rules match', function () {
         ->and($prices[$this->shippingCompany2->id]->breakdown->basePrice)->toBe(50.0); // GLOBAL rule
 });
 
-it('calculates price using customer rule', function () {
+it('calculates price using customer rule', function (): void {
     $request = new ShipmentPriceCalculationRequest(
         recipientRegionId: $this->region->id,
         userId: $this->user->id,
@@ -126,10 +126,10 @@ it('calculates price using customer rule', function () {
     $prices = $service->calculatePrices($request);
 
     expect($prices[$this->shippingCompany1->id]->breakdown->basePrice)->toBe(30.0) // CUSTOMER_SHIPPING_COMPANY rule
-    ->and($prices[$this->shippingCompany2->id]->breakdown->basePrice)->toBe(45.0); // CUSTOMER rule
+        ->and($prices[$this->shippingCompany2->id]->breakdown->basePrice)->toBe(45.0); // CUSTOMER rule
 });
 
-it('calculates price using company rule', function () {
+it('calculates price using company rule', function (): void {
     $request = new ShipmentPriceCalculationRequest(
         recipientRegionId: $this->region->id,
         userId: null,
@@ -144,10 +144,10 @@ it('calculates price using company rule', function () {
     $prices = $service->calculatePrices($request);
 
     expect($prices[$this->shippingCompany1->id]->breakdown->basePrice)->toBe(25.0) // COMPANY_SHIPPING_COMPANY rule
-    ->and($prices[$this->shippingCompany2->id]->breakdown->basePrice)->toBe(40.0); // COMPANY rule
+        ->and($prices[$this->shippingCompany2->id]->breakdown->basePrice)->toBe(40.0); // COMPANY rule
 });
 
-it('calculates price using shipping company rule', function () {
+it('calculates price using shipping company rule', function (): void {
     $request = new ShipmentPriceCalculationRequest(
         recipientRegionId: $this->region->id,
         userId: null,
@@ -163,10 +163,10 @@ it('calculates price using shipping company rule', function () {
 
     // Only shipping company 1 has a specific rule
     expect($prices[$this->shippingCompany1->id]->breakdown->basePrice)->toBe(35.0) // 5kg * 7
-    ->and($prices[$this->shippingCompany2->id]->breakdown->basePrice)->toBe(50.0); // Global rule
+        ->and($prices[$this->shippingCompany2->id]->breakdown->basePrice)->toBe(50.0); // Global rule
 });
 
-it('calculates price using customer and shipping company rule', function () {
+it('calculates price using customer and shipping company rule', function (): void {
     $request = new ShipmentPriceCalculationRequest(
         recipientRegionId: $this->region->id,
         userId: $this->user->id,
@@ -182,10 +182,10 @@ it('calculates price using customer and shipping company rule', function () {
 
     // Only shipping company 1 has a specific rule for this customer
     expect($prices[$this->shippingCompany1->id]->breakdown->basePrice)->toBe(30.0) // 5kg * 6
-    ->and($prices[$this->shippingCompany2->id]->breakdown->basePrice)->toBe(45.0); // Customer rule
+        ->and($prices[$this->shippingCompany2->id]->breakdown->basePrice)->toBe(45.0); // Customer rule
 });
 
-it('calculates price using company and shipping company rule', function () {
+it('calculates price using company and shipping company rule', function (): void {
     $request = new ShipmentPriceCalculationRequest(
         recipientRegionId: $this->region->id,
         userId: null,
@@ -201,10 +201,10 @@ it('calculates price using company and shipping company rule', function () {
 
     // Only shipping company 1 has a specific rule for this company
     expect($prices[$this->shippingCompany1->id]->breakdown->basePrice)->toBe(25.0) // 5kg * 5
-    ->and($prices[$this->shippingCompany2->id]->breakdown->basePrice)->toBe(40.0); // Company rule
+        ->and($prices[$this->shippingCompany2->id]->breakdown->basePrice)->toBe(40.0); // Company rule
 });
 
-it('calculates price with home pickup cost', function () {
+it('calculates price with home pickup cost', function (): void {
     $request = new ShipmentPriceCalculationRequest(
         recipientRegionId: $this->region->id,
         userId: null,
@@ -222,7 +222,7 @@ it('calculates price with home pickup cost', function () {
         ->and($prices[$this->shippingCompany2->id]->breakdown->homePickupCost)->toBe(15.0);
 });
 
-it('calculates price with insurance cost', function () {
+it('calculates price with insurance cost', function (): void {
     $request = new ShipmentPriceCalculationRequest(
         recipientRegionId: $this->region->id,
         userId: null,
@@ -238,4 +238,50 @@ it('calculates price with insurance cost', function () {
 
     expect($prices[$this->shippingCompany1->id]->breakdown->insuranceCost)->toBe(2.0) // 2% of 100
         ->and($prices[$this->shippingCompany2->id]->breakdown->insuranceCost)->toBe(25.0); // fixed amount
+});
+
+it('applies rules based on priority', function () {
+    $service = new ShipmentPriceCalculatorService();
+
+    // 1. Global rule
+    $request = new ShipmentPriceCalculationRequest(
+        recipientRegionId: $this->region->id,
+        userId: null,
+        companyId: null,
+        weight: 5,
+        homePickup: false,
+        shipmentValue: 100,
+        insured: false
+    );
+    $prices = $service->calculatePrices($request);
+    expect($prices[$this->shippingCompany1->id]->breakdown->basePrice)->toBe(35.0); // Shipping company rule
+    expect($prices[$this->shippingCompany2->id]->breakdown->basePrice)->toBe(50.0); // Global rule
+
+    // 2. Customer rule
+    $request = new ShipmentPriceCalculationRequest(
+        recipientRegionId: $this->region->id,
+        userId: $this->user->id,
+        companyId: null,
+        weight: 5,
+        homePickup: false,
+        shipmentValue: 100,
+        insured: false
+    );
+    $prices = $service->calculatePrices($request);
+    expect($prices[$this->shippingCompany1->id]->breakdown->basePrice)->toBe(30.0); // Customer & shipping company rule
+    expect($prices[$this->shippingCompany2->id]->breakdown->basePrice)->toBe(45.0); // Customer rule
+
+    // 3. Company rule
+    $request = new ShipmentPriceCalculationRequest(
+        recipientRegionId: $this->region->id,
+        userId: null,
+        companyId: $this->company->id,
+        weight: 5,
+        homePickup: false,
+        shipmentValue: 100,
+        insured: false
+    );
+    $prices = $service->calculatePrices($request);
+    expect($prices[$this->shippingCompany1->id]->breakdown->basePrice)->toBe(25.0); // Company & shipping company rule
+    expect($prices[$this->shippingCompany2->id]->breakdown->basePrice)->toBe(40.0); // Company rule
 });

@@ -15,7 +15,7 @@ use Illuminate\Support\Collection;
 
 final class CalculatePriceBreakdownsStep
 {
-    public function __invoke(array $data, Closure $next): array
+    public function __invoke(array $data): array
     {
         /** @var ShipmentPriceCalculationRequest $request */
         $request = $data['request'];
@@ -30,7 +30,7 @@ final class CalculatePriceBreakdownsStep
             /** @var ShippingCompany|null $shippingCompany */
             $shippingCompany = $shippingCompanies->get($shippingCompanyId);
 
-            if (!$shippingCompany) {
+            if ( ! $shippingCompany) {
                 continue;
             }
 
@@ -61,7 +61,7 @@ final class CalculatePriceBreakdownsStep
 
     private function calculateInsurance(ShippingCompany $shippingCompany, ShipmentPriceCalculationRequest $request): float
     {
-        if (!$request->insured) {
+        if ( ! $request->insured) {
             return 0.0;
         }
 

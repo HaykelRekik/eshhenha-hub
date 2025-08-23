@@ -48,7 +48,7 @@ final class MatchApplicableRulesStep
     {
         $customerShippingCompanyRules = $rulesByType->get(PricingRuleType::CUSTOMER_SHIPPING_COMPANY->value, new Collection());
         foreach ($customerShippingCompanyRules as $rule) {
-            if ($rule->user_id === $request->userId && !in_array($rule->shipping_company_id, $processedShippingCompanyIds)) {
+            if ($rule->user_id === $request->userId && ! in_array($rule->shipping_company_id, $processedShippingCompanyIds)) {
                 $matchedRules[$rule->shipping_company_id] = $rule;
                 $processedShippingCompanyIds[] = $rule->shipping_company_id;
             }
@@ -56,7 +56,7 @@ final class MatchApplicableRulesStep
 
         $companyShippingCompanyRules = $rulesByType->get(PricingRuleType::COMPANY_SHIPPING_COMPANY->value, new Collection());
         foreach ($companyShippingCompanyRules as $rule) {
-            if ($rule->company_id === $request->companyId && !in_array($rule->shipping_company_id, $processedShippingCompanyIds)) {
+            if ($rule->company_id === $request->companyId && ! in_array($rule->shipping_company_id, $processedShippingCompanyIds)) {
                 $matchedRules[$rule->shipping_company_id] = $rule;
                 $processedShippingCompanyIds[] = $rule->shipping_company_id;
             }
@@ -72,7 +72,7 @@ final class MatchApplicableRulesStep
 
         if ($applicableRule) {
             foreach ($shippingCompanies as $shippingCompany) {
-                if (!in_array($shippingCompany->id, $processedShippingCompanyIds)) {
+                if ( ! in_array($shippingCompany->id, $processedShippingCompanyIds)) {
                     $matchedRules[$shippingCompany->id] = $applicableRule;
                     $processedShippingCompanyIds[] = $shippingCompany->id;
                 }
@@ -84,7 +84,7 @@ final class MatchApplicableRulesStep
     {
         $shippingCompanyRules = $rulesByType->get(PricingRuleType::SHIPPING_COMPANY->value, new Collection());
         foreach ($shippingCompanyRules as $rule) {
-            if (!in_array($rule->shipping_company_id, $processedShippingCompanyIds)) {
+            if ( ! in_array($rule->shipping_company_id, $processedShippingCompanyIds)) {
                 $matchedRules[$rule->shipping_company_id] = $rule;
                 $processedShippingCompanyIds[] = $rule->shipping_company_id;
             }
@@ -97,7 +97,7 @@ final class MatchApplicableRulesStep
 
         if ($globalRule) {
             foreach ($shippingCompanies as $shippingCompany) {
-                if (!in_array($shippingCompany->id, $processedShippingCompanyIds)) {
+                if ( ! in_array($shippingCompany->id, $processedShippingCompanyIds)) {
                     $matchedRules[$shippingCompany->id] = $globalRule;
                 }
             }
