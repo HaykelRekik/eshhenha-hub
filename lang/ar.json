@@ -606,6 +606,16 @@
     "Redemption Instructions": "تعليمات الاستبدال",
     "approved": "مقبول",
     "rejected": "مرفوض",
-    "Request date": "تاريخ الطلب"
-
+    "Request date": "تاريخ الطلب",
+    "Accept Request": "قبول الطلب",
+    "Accept Exchange Request": "قبول طلب الاستبدال",
+    "Please provide the redemption instructions for the user. for example: provide the coupon code or the gift card number.": "يرجى تقديم تعليمات الاستبدال للمستخدم. على سبيل المثال: تقديم رمز القسيمة أو رقم بطاقة الهدايا.",
+    "Insufficient Loyalty Points": "نقاط الولاء غير كافية",
+    "The user does not have enough loyalty points to redeem this reward.": "ليس لدى المستخدم نقاط ولاء كافية لاستبدال هذه المكافأة.",
+    "Exchange Request Accepted": "تم قبول طلب الاستبدال",
+    "The exchange request has been accepted. The user has been rewarded with the exchange option.": "تم قبول طلب الاستبدال. تمت مكافأة المستخدم بخيار الاستبدال.",
+    "Reject": "رفض",
+    "Requested Product": "المنتج المطلوب",
+    "Request Reference": "مرجع الطلب",
+    "User Loyalty Points": "نقاط ولاء المستخدم"
 }
