@@ -11,7 +11,7 @@ use App\Filament\Pages\Settings\ContactChannelsSettingsPage;
 use App\Filament\Pages\Settings\GeneralSettingsPage;
 use App\Filament\Pages\Settings\LoyaltyConversionSettingsPage;
 use App\Filament\Pages\Settings\RewardSettingsPage;
-use App\Filament\Pages\User\WalletAndLoyaltyPage;
+use App\Filament\Pages\User\Wallet;
 use App\Filament\Resources\Users\UserResource;
 use Filament\Actions\Action;
 use Filament\Http\Middleware\Authenticate;
@@ -71,10 +71,10 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->userMenuItems([
                 Action::make('wallet')
-                    ->label(fn (): string => __('Wallet & Loyalty'))
+                    ->label(fn (): string => __('Wallet Management'))
                     ->icon(PhosphorIcons::WalletDuotone)
-                    ->url(fn (): string => WalletAndLoyaltyPage::getUrl()),
-                //                    ->visible(fn(): bool => auth()->check() && auth()->user()->hasAnyRole([UserRole::USER, UserRole::COMPANY])),
+                    ->url(fn (): string => Wallet::getUrl())
+                    ->visible(fn (): bool => auth()->check() && auth()->user()->hasAnyRole([UserRole::USER, UserRole::COMPANY])),
             ])
             ->navigationGroups([
                 NavigationGroup::make()

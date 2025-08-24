@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Enums;
 
+use App\Enums\Icons\PhosphorIcons;
 use BackedEnum;
 use Filament\Support\Contracts\HasColor;
 use Filament\Support\Contracts\HasIcon;
@@ -15,6 +16,7 @@ enum WalletTransactionType: string implements HasColor, HasIcon, HasLabel
     case DEPOSIT = 'deposit';           // User adds funds (e.g., via Stripe/MyFatoorah)
     case WITHDRAWAL = 'withdrawal';     // User spends wallet balance
     case LOYALTY_CONVERSION = 'loyalty points conversion'; // Points → Balance conversion
+    case BUY_LOYALTY_POINTS = 'Buy loyalty points'; // Balance → Points
     case ADJUSTMENT = 'adjustment';     // Manual admin adjustment (+/-)
     case REFUND = 'refund';             // Reversal of a prior transaction
     case TRANSFER_IN = 'transfer in';   // Received from another user
@@ -26,7 +28,7 @@ enum WalletTransactionType: string implements HasColor, HasIcon, HasLabel
     {
         return match ($this) {
             self::DEPOSIT, self::LOYALTY_CONVERSION, self::TRANSFER_IN, self::REFUND => 'success',
-            self::WITHDRAWAL, self::TRANSFER_OUT, self::FEE => 'danger',
+            self::WITHDRAWAL, self::BUY_LOYALTY_POINTS, self::TRANSFER_OUT, self::FEE => 'danger',
             self::ADJUSTMENT => 'warning',
             self::EXPIRATION => 'gray',
         };
@@ -43,7 +45,8 @@ enum WalletTransactionType: string implements HasColor, HasIcon, HasLabel
             self::TRANSFER_IN => Heroicon::InboxArrowDown,
             self::TRANSFER_OUT => Heroicon::PaperAirplane,
             self::EXPIRATION => Heroicon::Clock,
-            self::FEE => Heroicon::Banknotes
+            self::FEE => Heroicon::Banknotes,
+            self::BUY_LOYALTY_POINTS => PhosphorIcons::Medal
         };
     }
 

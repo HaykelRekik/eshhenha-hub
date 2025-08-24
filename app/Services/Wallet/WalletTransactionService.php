@@ -64,6 +64,7 @@ class WalletTransactionService
     {
         return in_array($type, [
             WalletTransactionType::WITHDRAWAL,
+            WalletTransactionType::BUY_LOYALTY_POINTS,
             WalletTransactionType::TRANSFER_OUT,
             WalletTransactionType::EXPIRATION,
             WalletTransactionType::FEE,
