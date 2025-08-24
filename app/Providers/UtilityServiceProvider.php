@@ -10,6 +10,7 @@ use BezhanSalleh\LanguageSwitch\LanguageSwitch;
 use Filament\Actions\CreateAction;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\ToggleButtons;
 use Filament\Infolists\Components\ImageEntry;
@@ -53,6 +54,8 @@ class UtilityServiceProvider extends ServiceProvider
         ToggleButtons::configureUsing(modifyUsing: fn (ToggleButtons $toggleButtons): ToggleButtons => $toggleButtons->inline());
 
         TextInput::configureUsing(modifyUsing: fn (TextInput $input): TextInput => $input->maxLength(255));
+
+        Textarea::configureUsing(modifyUsing: fn (Textarea $input): Textarea => $input->autosize());
 
         TextColumn::configureUsing(modifyUsing: fn (TextColumn $column): TextColumn => $column->placeholder(__('Not specified')));
 
