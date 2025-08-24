@@ -544,5 +544,18 @@
     "Interval :current overlaps with interval :next. Range :currentRange conflicts with :nextRange": "الفاصل :current يتداخل مع الفاصل :next. النطاق :currentRange يتعارض مع :nextRange",
     "Rule Type": "نوع القاعدة",
     "Local Tax Rate": "الضريبة على الشحن المحلي ",
-    "International Tax Rate": "الضريبة على الشحن الدولي"
+    "International Tax Rate": "الضريبة على الشحن الدولي",
+    "Topup Balance": "شحن الرصيد",
+    "Failed to initialize payment": "فشل في بدء عملية الدفع",
+    "Please try again later.": "يرجى المحاولة مرة أخرى لاحقًا.",
+    "Wallet & Loyalty": "المحفظة والولاء",
+    "Missing payment identifier.": "معرف الدفع مفقود.",
+    "Unable to verify payment at the moment.": "غير قادر على التحقق من الدفع في الوقت الحالي.",
+    "Payment not successful.": "فشل عملية الدفع.",
+    "Please check your card information and expiration date, and make sure you have sufficient balance." : "يرجى التحقق من معلومات بطاقتك وتاريخ انتهاء صلاحيتها، وتأكد من وجود رصيد كافٍ لديك.",
+    "Invalid payment context.": "سياق الدفع غير صالح.",
+    "User or wallet not found.": "المستخدم أو المحفظة غير موجودة.",
+    "Failed to update wallet.": "فشل في تحديث المحفظة.",
+    "Wallet recharged successfully.": "تم شحن المحفظة بنجاح.",
+    "Complete Registration": "إكمال التسجيل"
 }

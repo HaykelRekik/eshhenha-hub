@@ -23,7 +23,7 @@ readonly class PaymentRequestDto
             'DisplayCurrencyIso' => $this->displayCurrency,
             'CustomerEmail' => $this->customerEmail,
             'InvoiceValue' => $this->amount,
-            'CallBackUrl' => $this->callbackUrl,
+            'CallBackUrl' => $this->callbackUrl ?? route('payment.callback'),
             'ErrorUrl' => $this->callbackUrl,
             'Language' => app()->getLocale(),
             'CustomerReference' => uniqid(prefix: 'ref_'),
