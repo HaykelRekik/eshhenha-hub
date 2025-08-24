@@ -123,7 +123,8 @@ class PaymentController extends Controller
                     'gateway' => 'myfatoorah',
                     'payment_id' => $paymentId,
                     'status' => Arr::get($status, 'Data.InvoiceStatus'),
-                ]
+                ],
+                external_identifier: $paymentId,
             );
         });
     }

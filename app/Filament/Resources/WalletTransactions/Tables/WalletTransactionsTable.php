@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Filament\Resources\WalletTransactions\Tables;
 
 use App\Enums\WalletTransactionType;
+use App\Filament\Pages\User\Widgets\UserTransactionsTable;
 use App\Models\WalletTransaction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
@@ -30,9 +31,11 @@ class WalletTransactionsTable
 
                 TextColumn::make('user.name')
                     ->label(__('User'))
+                    ->hiddenOn(UserTransactionsTable::class)
                     ->description(fn (WalletTransaction $record): string => $record->user?->role->getLabel() . ' ' . $record->user?->company?->name),
 
                 TextColumn::make('performedBy.name')
+                    ->hiddenOn(UserTransactionsTable::class)
                     ->label(__('Performed By')),
 
                 TextColumn::make('created_at')

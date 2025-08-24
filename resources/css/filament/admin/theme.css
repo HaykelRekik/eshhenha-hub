@@ -88,3 +88,7 @@
         }
     }
 }
+
+.fi-header-subheading {
+    @apply text-base
+}

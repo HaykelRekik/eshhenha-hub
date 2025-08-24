@@ -20,8 +20,9 @@ class WalletTransactionService
         Wallet $wallet,
         WalletTransactionType $type,
         float $amount,
-        ?string $reason = null,
-        ?array $metadata = []
+        ?string $reason,
+        ?array $metadata,
+        ?string $external_identifier = null,
     ): WalletTransaction {
         $absoluteAmount = abs($amount);
 
@@ -29,7 +30,7 @@ class WalletTransactionService
             throw new Exception(__('Insufficient wallet balance for this operation.'));
         }
 
-        return DB::transaction(function () use ($wallet, $type, $absoluteAmount, $reason, $metadata) {
+        return DB::transaction(function () use ($external_identifier, $wallet, $type, $absoluteAmount, $reason, $metadata) {
             $balanceBefore = $wallet->balance;
 
             $newBalance = $this->isDebit($type)
@@ -46,6 +47,7 @@ class WalletTransactionService
                 'balance_after' => $newBalance,
                 'metadata' => $metadata,
                 'user_id' => $wallet->user_id,
+                'external_identifier' => $external_identifier,
             ]);
 
             $wallet->update([

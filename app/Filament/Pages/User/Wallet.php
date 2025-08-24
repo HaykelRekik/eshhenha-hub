@@ -8,6 +8,8 @@ use App\Enums\Icons\PhosphorIcons;
 use App\Enums\UserRole;
 use App\Filament\Pages\User\Actions\BuyPointsAction;
 use App\Filament\Pages\User\Actions\TopupBalanceAction;
+use App\Filament\Pages\User\Widgets\UserTransactionsTable;
+use App\Filament\Pages\User\Widgets\UserWalletCards;
 use BackedEnum;
 use Filament\Pages\Page;
 use Illuminate\Contracts\Support\Htmlable;
@@ -45,6 +47,14 @@ class Wallet extends Page
         return [
             TopupBalanceAction::make(),
             BuyPointsAction::make(),
+        ];
+    }
+
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            UserWalletCards::class,
+            UserTransactionsTable::class,
         ];
     }
 }
