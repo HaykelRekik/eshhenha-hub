@@ -26,7 +26,8 @@ class RewardInfolist
                             ->columns(1)
                             ->components([
                                 ImageEntry::make('image')
-                                    ->imageHeight(120)
+                                    ->imageHeight(150)
+                                    ->extraImgAttributes(['class' => 'w-full h-full rounded-lg overflow-hidden', 'loading' => 'lazy'])
                                     ->hiddenLabel()
                                     ->visibility('public'),
                             ])->columnSpan(1),

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources\Rewards;
 
+use App\Enums\Icons\PhosphorIcons;
 use App\Filament\Resources\Rewards\Pages\CreateReward;
 use App\Filament\Resources\Rewards\Pages\EditReward;
 use App\Filament\Resources\Rewards\Pages\ListRewards;
@@ -15,14 +16,13 @@ use App\Models\Reward;
 use BackedEnum;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
-use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 
 class RewardResource extends Resource
 {
     protected static ?string $model = Reward::class;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = PhosphorIcons::GiftDuotone;
 
     public static function form(Schema $schema): Schema
     {
