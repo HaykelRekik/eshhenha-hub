@@ -544,5 +544,9 @@
     "Interval :current overlaps with interval :next. Range :currentRange conflicts with :nextRange": "الفاصل :current يتداخل مع الفاصل :next. النطاق :currentRange يتعارض مع :nextRange",
     "Rule Type": "نوع القاعدة",
     "Local Tax Rate": "الضريبة على الشحن المحلي ",
-    "International Tax Rate": "الضريبة على الشحن الدولي"
+    "International Tax Rate": "الضريبة على الشحن الدولي",
+    "Select existing recipient" : "اختيار مستلم موجود",
+    "Create new recipient" : "إنشاء مستلم جديد",
+    "Recipient Option" : "خيار المستلم",
+    "Select Recipient" : "اختر المستلم"
 }
